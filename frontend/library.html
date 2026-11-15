@@ -1,0 +1,1352 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Library | StudyHub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #24344d;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            background: #142d4e;
+            color: white;
+            padding: 25px 16px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 23px;
+            font-weight: bold;
+            margin: 0 10px 40px;
+        }
+
+        .nav a {
+            display: block;
+            color: #dce7f5;
+            text-decoration: none;
+            padding: 13px 15px;
+            margin-bottom: 8px;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #24517e;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            background: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e8edf3;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar h2 {
+            font-size: 21px;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: #eaf2f8;
+            color: #142d4e;
+            font-size: 23px;
+            padding: 7px 11px;
+        }
+
+        .sidebar-overlay {
+            display: none;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .intro {
+            margin-bottom: 25px;
+        }
+
+        .intro h1 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .intro p {
+            color: #718096;
+        }
+
+        .upload-card,
+        .library-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        }
+
+        .section-title {
+            font-size: 19px;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dce3ec;
+            border-radius: 7px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #087fbe;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            border: none;
+            border-radius: 7px;
+            padding: 11px 17px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .primary-btn {
+            background: #087fbe;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #06699e;
+        }
+
+        .secondary-btn {
+            background: #eaf2f8;
+            color: #24517e;
+        }
+
+        .danger-btn {
+            background: #fff0f0;
+            color: #d33;
+        }
+
+        .upload-actions {
+            margin-top: 18px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .toolbar input {
+            flex: 1;
+        }
+
+        .toolbar select {
+            max-width: 190px;
+        }
+
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 18px;
+        }
+
+        .file-card {
+            border: 1px solid #e8edf3;
+            border-radius: 10px;
+            padding: 18px;
+            min-width: 0;
+        }
+
+        .file-icon {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .file-card h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .file-card p {
+            color: #718096;
+            font-size: 13px;
+            margin-bottom: 7px;
+            overflow-wrap: anywhere;
+        }
+
+        .file-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 15px;
+        }
+
+        .file-actions button {
+            padding: 8px 10px;
+            font-size: 12px;
+        }
+
+        .message {
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .empty {
+            text-align: center;
+            color: #718096;
+            padding: 35px 10px;
+            grid-column: 1 / -1;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+
+       
+/* FULL SCREEN DOCUMENT READER */
+.reader-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    width: 100vw;
+    height: 100vh;
+    background: #ffffff;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    padding: 0;
+}
+
+.reader-modal.hidden {
+    display: none;
+}
+
+.reader-panel {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    background: #fff;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.reader-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid #e8edf3;
+    flex-shrink: 0;
+}
+
+.reader-header h2 {
+    font-size: 17px;
+    overflow-wrap: anywhere;
+}
+
+.reader-body {
+    flex: 1;
+    min-height: 0;
+    background: #eef2f7;
+    overflow: hidden;
+}
+
+.reader-body iframe,
+.reader-body img {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    object-fit: contain;
+    background: #fff;
+}
+
+.reader-note {
+    padding: 12px 18px;
+    color: #718096;
+    font-size: 13px;
+    border-top: 1px solid #e8edf3;
+    flex-shrink: 0;
+}
+
+
+        .offline-section {
+            margin-top: 25px;
+        }
+
+        .offline-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .offline-item {
+            border: 1px solid #e8edf3;
+            border-radius: 9px;
+            padding: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .offline-item strong {
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .offline-item small {
+            display: block;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        @media(max-width: 600px) {
+            .reader-modal { padding: 0; }
+            .reader-panel {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+            .reader-header { padding: 12px; }
+        }
+
+        @media(max-width: 750px) {
+            .content {
+                padding: 20px;
+            }
+        }
+
+        @media(max-width: 600px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 260px;
+                height: 100vh;
+                z-index: 1001;
+                overflow-y: auto;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                padding: 25px 16px;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .brand {
+                margin: 5px 8px 30px;
+            }
+
+            .nav {
+                display: block;
+                overflow: visible;
+            }
+
+            .nav a {
+                display: block;
+                white-space: normal;
+                margin-bottom: 8px;
+                padding: 13px 15px;
+            }
+
+            .menu-toggle {
+                display: inline-block;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.45);
+                z-index: 1000;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .topbar {
+                padding: 16px 20px;
+            }
+
+            .topbar h2 {
+                font-size: 19px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .toolbar {
+                flex-direction: column;
+            }
+
+            .toolbar select {
+                max-width: none;
+            }
+
+            .upload-card,
+            .library-card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">StudyHub</div>
+
+        <nav class="nav">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="library.html" class="active">My Library</a>
+            <a href="timetable.html">Timetable</a>
+            <a href="goals.html">Study Goals</a>
+            <a href="reminder.html">Reminders</a>
+            <a href="progress.html">Progress Board</a>
+            <a href="#" id="logoutLink">Logout</a>
+        </nav>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+                <button
+                    type="button"
+                    class="menu-toggle"
+                    id="menuToggle"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false">
+                    ☰
+                </button>
+
+                <h2>My Library</h2>
+            </div>
+
+            <span id="studentName">Student</span>
+
+        </header>
+
+        <div class="content">
+
+            <div class="intro">
+                <h1>My Learning Materials</h1>
+                <p>Upload, organize and access your academic documents in one place.</p>
+            </div>
+
+            <section class="upload-card">
+
+                <h2 class="section-title">Upload Learning Material</h2>
+
+                <form id="uploadForm">
+
+                    <div class="form-grid">
+
+                        <div class="field">
+                            <label for="title">Material Title</label>
+                            <input
+                                type="text"
+                                id="title"
+                                placeholder="e.g. Database Management Notes"
+                                required>
+                        </div>
+
+                        <div class="field">
+                            <label for="category">Category</label>
+                            <select id="category" required>
+                                <option value="">Select category</option>
+                                <option value="Lecture Notes">Lecture Notes</option>
+                                <option value="Assignments">Assignments</option>
+                                <option value="Past Papers">Past Papers</option>
+                                <option value="Books">Books</option>
+                                <option value="Research">Research</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="field full">
+                            <label for="description">Description</label>
+                            <textarea
+                                id="description"
+                                placeholder="Enter a short description (optional)">
+                            </textarea>
+                        </div>
+
+                        <div class="field full">
+                            <label for="file">Choose File</label>
+                            <input
+                                type="file"
+                                id="file"
+                                accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png"
+                                required>
+                            <small>
+                                Allowed: PDF, Word, PowerPoint, JPG and PNG.
+                                Maximum 40 MB.
+                            </small>
+                        </div>
+
+                    </div>
+
+                    <div class="upload-actions">
+                        <button
+                            type="submit"
+                            class="primary-btn"
+                            id="uploadBtn">
+                            Upload Material
+                        </button>
+                    </div>
+
+                    <p id="uploadMessage" class="message"></p>
+
+                </form>
+
+            </section>
+
+            <section class="library-card">
+
+                <h2 class="section-title">My Uploaded Materials</h2>
+
+                <div class="toolbar">
+
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Search materials...">
+
+                    <select id="filterCategory">
+                        <option value="">All Categories</option>
+                        <option value="Lecture Notes">Lecture Notes</option>
+                        <option value="Assignments">Assignments</option>
+                        <option value="Past Papers">Past Papers</option>
+                        <option value="Books">Books</option>
+                        <option value="Research">Research</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                </div>
+
+                <p id="libraryMessage" class="message"></p>
+
+                <div class="files-grid" id="filesContainer">
+                    <div class="empty">Loading your materials...</div>
+                </div>
+
+            </section>
+
+            <section class="library-card offline-section">
+                <h2 class="section-title">My Offline Documents</h2>
+                <p class="message">Documents saved on this device can be opened without an internet connection.</p>
+                <div class="offline-list" id="offlineFilesContainer">
+                    <div class="empty">Loading offline documents...</div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<div class="reader-modal hidden" id="readerModal" role="dialog" aria-modal="true" aria-labelledby="readerTitle">
+    <div class="reader-panel">
+        <div class="reader-header">
+            <h2 id="readerTitle">Document Reader</h2>
+            <button type="button" class="danger-btn" id="closeReaderBtn">Close</button>
+        </div>
+        <div class="reader-body" id="readerBody"></div>
+        <div class="reader-note" id="readerNote">For offline access, save this document on your device while online.</div>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:5000/api';
+
+    const token = sessionStorage.getItem('studyhubToken');
+
+    const filesContainer = document.getElementById('filesContainer');
+    const uploadForm = document.getElementById('uploadForm');
+    const uploadMessage = document.getElementById('uploadMessage');
+    const libraryMessage = document.getElementById('libraryMessage');
+
+
+    let allFiles = [];
+    let currentReaderUrl = null;
+
+    // Offline document storage (per browser/device)
+    const DB_NAME = 'StudyHubOfflineLibrary';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'documents';
+
+    function openOfflineDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
+            request.onupgradeneeded = () => {
+                const db = request.result;
+                if (!db.objectStoreNames.contains(STORE_NAME)) {
+                    db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                }
+            };
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    async function offlineRequest(mode, operation) {
+        const db = await openOfflineDB();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(STORE_NAME, mode);
+            const store = transaction.objectStore(STORE_NAME);
+            const request = operation(store);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+            transaction.oncomplete = () => db.close();
+            transaction.onerror = () => reject(transaction.error);
+        });
+    }
+
+    async function getOfflineDocument(id) {
+        return offlineRequest('readonly', store => store.get(Number(id)));
+    }
+
+    async function getAllOfflineDocuments() {
+        return (await offlineRequest('readonly', store => store.getAll())) || [];
+    }
+
+    async function saveOfflineDocument(record) {
+        return offlineRequest('readwrite', store => store.put(record));
+    }
+
+    async function deleteOfflineDocument(id) {
+        return offlineRequest('readwrite', store => store.delete(Number(id)));
+    }
+
+    function canReadInBrowser(file) {
+        const mime = (file.mime_type || '').toLowerCase();
+        const extension = (file.file_extension || '').toLowerCase();
+        return mime === 'application/pdf' || mime.startsWith('image/') ||
+            ['.pdf', '.jpg', '.jpeg', '.png'].includes(extension);
+    }
+
+    function revokeReaderUrl() {
+        if (currentReaderUrl) {
+            URL.revokeObjectURL(currentReaderUrl);
+            currentReaderUrl = null;
+        }
+    }
+
+    function closeReader() {
+        revokeReaderUrl();
+        document.getElementById('readerBody').replaceChildren();
+        document.getElementById('readerModal').classList.add('hidden');
+    }
+
+    function openReaderWithBlob(blob, fileName, mimeType, offline = false) {
+        revokeReaderUrl();
+        currentReaderUrl = URL.createObjectURL(blob);
+
+        const body = document.getElementById('readerBody');
+        body.replaceChildren();
+
+        const effectiveType = mimeType || blob.type || '';
+        if (effectiveType === 'application/pdf' || /\.pdf$/i.test(fileName)) {
+            const frame = document.createElement('iframe');
+            frame.title = fileName;
+            frame.src = currentReaderUrl;
+            body.appendChild(frame);
+        } else if (effectiveType.startsWith('image/') || /\.(jpg|jpeg|png)$/i.test(fileName)) {
+            const image = document.createElement('img');
+            image.alt = fileName;
+            image.src = currentReaderUrl;
+            body.appendChild(image);
+        } else {
+            throw new Error('This file type cannot be previewed inside the browser yet. PDF, JPG and PNG are supported by the reader.');
+        }
+
+        document.getElementById('readerTitle').textContent = fileName || 'Document Reader';
+        document.getElementById('readerNote').textContent = offline
+            ? 'Opened from this device. Internet connection is not required.'
+            : 'Online preview. Select Save Offline on the document card to read it without internet.';
+        document.getElementById('readerModal').classList.remove('hidden');
+    }
+
+    async function readFile(id) {
+        const file = allFiles.find(item => Number(item.id) === Number(id));
+        if (!file) return alert('Document not found in your Library.');
+
+        if (!canReadInBrowser(file)) {
+            return alert('The in-app reader currently supports PDF, JPG and PNG. You can still use Download for Word and PowerPoint files.');
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/library/${id}/preview`, {
+                headers: authHeaders()
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Could not prepare document preview.');
+            if (!data.previewUrl) throw new Error('Preview URL was not returned.');
+
+            // Fetch the file as a Blob so the same reader works with offline storage.
+            const fileResponse = await fetch(data.previewUrl);
+            if (!fileResponse.ok) throw new Error('Could not load the document from storage. Please try again.');
+            const blob = await fileResponse.blob();
+            openReaderWithBlob(blob, data.fileName || file.original_file_name, data.mimeType || file.mime_type);
+        } catch (error) {
+            alert(`${error.message}\n\nIf this is a network/CORS error, check Supabase Storage CORS settings.`);
+        }
+    }
+
+    async function saveFileOffline(id, button) {
+        const file = allFiles.find(item => Number(item.id) === Number(id));
+        if (!file) return alert('Document not found in your Library.');
+
+        if (!canReadInBrowser(file)) {
+            return alert('Offline reading currently supports PDF, JPG and PNG files only.');
+        }
+
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Saving...';
+
+        try {
+            const response = await fetch(`${API_URL}/library/${id}/preview`, {
+                headers: authHeaders()
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Could not prepare file for offline saving.');
+
+            const fileResponse = await fetch(data.previewUrl);
+            if (!fileResponse.ok) throw new Error('Could not retrieve the file from storage.');
+            const blob = await fileResponse.blob();
+
+            await saveOfflineDocument({
+                id: Number(file.id),
+                title: file.title || file.original_file_name,
+                fileName: data.fileName || file.original_file_name,
+                mimeType: data.mimeType || file.mime_type || blob.type,
+                blob,
+                savedAt: new Date().toISOString()
+            });
+
+            await renderOfflineFiles();
+            button.textContent = 'Saved Offline';
+        } catch (error) {
+            alert(`${error.message}\n\nIf this is a network/CORS error, check Supabase Storage CORS settings.`);
+            button.textContent = originalText;
+        } finally {
+            button.disabled = false;
+        }
+    }
+
+    async function openOfflineFile(id) {
+        try {
+            const saved = await getOfflineDocument(id);
+            if (!saved || !saved.blob) throw new Error('Offline copy not found on this device.');
+            openReaderWithBlob(saved.blob, saved.fileName || saved.title, saved.mimeType, true);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    async function removeOfflineFile(id) {
+        if (!confirm('Remove this offline copy from this device? The original Library document will not be deleted.')) return;
+        try {
+            await deleteOfflineDocument(id);
+            await renderOfflineFiles();
+            renderFiles();
+        } catch (error) {
+            alert('Could not remove the offline copy.');
+        }
+    }
+
+    async function renderOfflineFiles() {
+        const container = document.getElementById('offlineFilesContainer');
+        if (!container) return;
+
+        try {
+            const savedFiles = await getAllOfflineDocuments();
+            container.replaceChildren();
+
+            if (!savedFiles.length) {
+                const empty = document.createElement('div');
+                empty.className = 'empty';
+                empty.textContent = 'No offline documents saved on this device yet.';
+                container.appendChild(empty);
+                return;
+            }
+
+            savedFiles.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+            savedFiles.forEach(saved => {
+                const item = document.createElement('div');
+                item.className = 'offline-item';
+
+                const info = document.createElement('div');
+                const name = document.createElement('strong');
+                name.textContent = saved.title || saved.fileName || 'Offline document';
+                const date = document.createElement('small');
+                date.textContent = `Saved: ${new Date(saved.savedAt).toLocaleDateString()}`;
+                info.append(name, date);
+
+                const actions = document.createElement('div');
+                actions.style.display = 'flex';
+                actions.style.gap = '6px';
+
+                const openBtn = document.createElement('button');
+                openBtn.className = 'primary-btn';
+                openBtn.textContent = 'Read';
+                openBtn.addEventListener('click', () => openOfflineFile(saved.id));
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'danger-btn';
+                removeBtn.textContent = 'Remove';
+                removeBtn.addEventListener('click', () => removeOfflineFile(saved.id));
+
+                actions.append(openBtn, removeBtn);
+                item.append(info, actions);
+                container.appendChild(item);
+            });
+        } catch (error) {
+            container.textContent = 'Offline storage is unavailable in this browser.';
+        }
+    }
+
+
+
+    // Mobile hamburger menu
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('show');
+        menuToggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('show');
+        menuToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    menuToggle.addEventListener('click', function() {
+        if (sidebar.classList.contains('open')) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    });
+
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    document.querySelectorAll('.nav a').forEach(link => {
+        link.addEventListener('click', closeSidebar);
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeSidebar();
+        }
+    });
+
+    // Check authentication
+    if (!token) {
+        window.location.href = 'login.html';
+    }
+
+    // Common API request headers
+    function authHeaders() {
+        return {
+            'Authorization': `Bearer ${token}`
+        };
+    }
+
+    // Load student information
+    async function loadStudent() {
+        try {
+            const response = await fetch(`${API_URL}/auth/me`, {
+                headers: authHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error('Session expired');
+            }
+
+            const data = await response.json();
+
+            const student = data.user || data.student || data;
+
+            document.getElementById('studentName').textContent =
+                student.full_name ||
+                student.name ||
+                student.first_name ||
+                'Student';
+
+        } catch (error) {
+            sessionStorage.removeItem('studyhubToken');
+            sessionStorage.removeItem('studyhubStudent');
+            window.location.href = 'login.html';
+        }
+    }
+
+    // Upload material
+    uploadForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const file = document.getElementById('file').files[0];
+
+        if (!file) {
+            uploadMessage.textContent = 'Please choose a file.';
+            return;
+        }
+
+        if (file.size > 40 * 1024 * 1024) {
+            uploadMessage.textContent = 'File size must not exceed 40 MB.';
+            return;
+        }
+
+        const formData = new FormData();
+
+        formData.append('file', file);
+        formData.append(
+            'title',
+            document.getElementById('title').value.trim()
+        );
+        formData.append(
+            'category',
+            document.getElementById('category').value
+        );
+        formData.append(
+            'description',
+            document.getElementById('description').value.trim()
+        );
+
+        const uploadBtn = document.getElementById('uploadBtn');
+
+        uploadBtn.disabled = true;
+        uploadBtn.textContent = 'Uploading...';
+        uploadMessage.textContent = '';
+
+        try {
+            const response = await fetch(`${API_URL}/library/upload`, {
+                method: 'POST',
+                headers: authHeaders(),
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Upload failed.');
+            }
+
+            uploadMessage.textContent =
+                'Material uploaded successfully!';
+
+            uploadForm.reset();
+
+            await loadFiles();
+
+        } catch (error) {
+            uploadMessage.textContent = error.message;
+
+        } finally {
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = 'Upload Material';
+        }
+    });
+
+    // Load student's library materials
+    async function loadFiles() {
+        filesContainer.innerHTML =
+            '<div class="empty">Loading materials...</div>';
+
+        try {
+            const response = await fetch(`${API_URL}/library`, {
+                headers: authHeaders()
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Could not load materials.');
+            }
+
+            allFiles = data.files || [];
+
+            renderFiles();
+
+        } catch (error) {
+            filesContainer.textContent = error.message;
+        }
+    }
+
+    // Display files
+    function renderFiles() {
+        const search = document.getElementById('searchInput')
+            .value.toLowerCase().trim();
+
+        const category =
+            document.getElementById('filterCategory').value;
+
+        const filteredFiles = allFiles.filter(file => {
+            const title = (
+                file.title || file.original_name || ''
+            ).toLowerCase();
+
+            const matchesSearch = title.includes(search);
+
+            const matchesCategory =
+                !category || file.category === category;
+
+            return matchesSearch && matchesCategory;
+        });
+
+        filesContainer.replaceChildren();
+
+        if (filteredFiles.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'empty';
+            empty.textContent = 'No learning materials found.';
+            filesContainer.appendChild(empty);
+            return;
+        }
+
+        filteredFiles.forEach(file => {
+            const card = document.createElement('div');
+            card.className = 'file-card';
+
+            const icon = document.createElement('div');
+            icon.className = 'file-icon';
+            icon.textContent = '📄';
+
+            const title = document.createElement('h3');
+            title.textContent =
+                file.title || file.original_name || 'Untitled';
+
+            const categoryText = document.createElement('p');
+            categoryText.textContent =
+                'Category: ' + (file.category || 'Other');
+
+            const description = document.createElement('p');
+            description.textContent =
+                file.description || 'No description';
+
+            const date = document.createElement('p');
+            date.textContent = file.created_at
+                ? 'Uploaded: ' +
+                  new Date(file.created_at).toLocaleDateString()
+                : '';
+
+            const actions = document.createElement('div');
+            actions.className = 'file-actions';
+
+            const readBtn = document.createElement('button');
+            readBtn.className = 'primary-btn';
+            readBtn.textContent = 'Read';
+            readBtn.disabled = !canReadInBrowser(file);
+            readBtn.title = readBtn.disabled
+                ? 'In-app reading currently supports PDF, JPG and PNG.'
+                : 'Read inside StudyHub';
+            readBtn.addEventListener('click', () => readFile(file.id));
+
+            const offlineBtn = document.createElement('button');
+            offlineBtn.className = 'secondary-btn';
+            offlineBtn.textContent = 'Save Offline';
+            offlineBtn.disabled = !canReadInBrowser(file);
+            offlineBtn.addEventListener('click', () => saveFileOffline(file.id, offlineBtn));
+            getOfflineDocument(file.id).then(saved => {
+                if (saved) offlineBtn.textContent = 'Saved Offline';
+            }).catch(() => {});
+
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'primary-btn';
+            downloadBtn.textContent = 'Download';
+            downloadBtn.addEventListener(
+                'click',
+                () => downloadFile(file.id)
+            );
+
+            const editBtn = document.createElement('button');
+            editBtn.className = 'secondary-btn';
+            editBtn.textContent = 'Edit';
+            editBtn.addEventListener(
+                'click',
+                () => editFile(file)
+            );
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'danger-btn';
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.addEventListener(
+                'click',
+                () => deleteFile(file.id)
+            );
+
+            actions.append(readBtn, offlineBtn, downloadBtn, editBtn, deleteBtn);
+
+            card.append(
+                icon,
+                title,
+                categoryText,
+                description,
+                date,
+                actions
+            );
+
+            filesContainer.appendChild(card);
+        });
+    }
+
+    // Download file
+    async function downloadFile(id) {
+        try {
+            const response = await fetch(
+                `${API_URL}/library/${id}/download`,
+                { headers: authHeaders() }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Download failed.');
+            }
+
+            const downloadUrl =
+                data.downloadUrl ||
+                data.url ||
+                data.signedUrl ||
+                data.data?.downloadUrl ||
+                data.data?.url;
+
+            if (!downloadUrl) {
+                throw new Error(
+                    'Download URL was not returned by the server.'
+                );
+            }
+
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.target = '_blank';
+            link.rel = 'noopener';
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    // Edit file details
+    async function editFile(file) {
+        const newTitle = prompt(
+            'Enter new material title:',
+            file.title || ''
+        );
+
+        if (newTitle === null) return;
+
+        const newCategory = prompt(
+            'Enter category (Lecture Notes, Assignments, Past Papers, Books, Research, Other):',
+            file.category || 'Other'
+        );
+
+        if (newCategory === null) return;
+
+        const newDescription = prompt(
+            'Enter description:',
+            file.description || ''
+        );
+
+        if (newDescription === null) return;
+
+        try {
+            const response = await fetch(
+                `${API_URL}/library/${file.id}`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        ...authHeaders(),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: newTitle.trim(),
+                        category: newCategory.trim(),
+                        description: newDescription.trim()
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Update failed.');
+            }
+
+            alert('Material updated successfully.');
+            await loadFiles();
+
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    // Delete file
+    async function deleteFile(id) {
+        const confirmed = confirm(
+            'Are you sure you want to delete this material?'
+        );
+
+        if (!confirmed) return;
+
+        try {
+            const response = await fetch(
+                `${API_URL}/library/${id}`,
+                {
+                    method: 'DELETE',
+                    headers: authHeaders()
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Delete failed.');
+            }
+
+            alert('Material deleted successfully.');
+            await loadFiles();
+
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    // Search and category filter
+    document.getElementById('searchInput')
+        .addEventListener('input', renderFiles);
+
+    document.getElementById('filterCategory')
+        .addEventListener('change', renderFiles);
+
+    // Logout
+    document.getElementById('logoutLink')
+        .addEventListener('click', function(event) {
+            event.preventDefault();
+
+            sessionStorage.removeItem('studyhubToken');
+            sessionStorage.removeItem('studyhubStudent');
+
+            window.location.href = 'login.html';
+        });
+
+    // Reader modal controls
+    document.getElementById('closeReaderBtn').addEventListener('click', closeReader);
+    document.getElementById('readerModal').addEventListener('click', event => {
+        if (event.target.id === 'readerModal') closeReader();
+    });
+
+    // Start
+    if (token) {
+        loadStudent();
+        loadFiles();
+        renderOfflineFiles();
+    }
+
+    window.addEventListener('beforeunload', revokeReaderUrl);
+</script>
+
+</body>
+</html>

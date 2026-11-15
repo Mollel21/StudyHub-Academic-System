@@ -1,0 +1,1268 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reminders | StudyHub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #263445;
+        }
+
+        header {
+            background: #087fbe;
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 { font-size: 23px; }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        nav a:hover { text-decoration: underline; }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .page-heading { margin-bottom: 25px; }
+
+        .page-heading h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .page-heading p { color: #718096; }
+
+        .notification-panel {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .notification-panel h3 { margin-bottom: 8px; }
+
+        .notification-panel p {
+            color: #718096;
+            font-size: 13px;
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .notification-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .enable-btn {
+            background: #087fbe;
+            color: white;
+        }
+
+        .disable-btn {
+            background: #ffe5e5;
+            color: #c53030;
+        }
+
+        #notificationStatus {
+            display: block;
+            margin-top: 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .summary-card p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .summary-card h2 {
+            margin-top: 10px;
+            color: #087fbe;
+            font-size: 28px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .panel {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .panel h2 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .form-group { margin-bottom: 16px; }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d8e0e8;
+            border-radius: 7px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #087fbe;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 85px;
+        }
+
+        button {
+            border: none;
+            border-radius: 7px;
+            padding: 11px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .primary-btn {
+            background: #087fbe;
+            color: white;
+            width: 100%;
+        }
+
+        .primary-btn:hover { background: #06699e; }
+
+        .secondary-btn {
+            background: #e8eef3;
+            color: #263445;
+        }
+
+        .edit-btn {
+            background: #fff2d8;
+            color: #946200;
+        }
+
+        .complete-btn {
+            background: #e0f5e9;
+            color: #168348;
+        }
+
+        .delete-btn {
+            background: #ffe5e5;
+            color: #c53030;
+        }
+
+        .cancel-btn {
+            background: #edf0f4;
+            color: #526174;
+        }
+
+        .reminder-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .reminder-card {
+            border: 1px solid #e5eaf0;
+            padding: 17px;
+            border-radius: 9px;
+        }
+
+        .reminder-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .reminder-card h3 {
+            font-size: 17px;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .reminder-card p {
+            font-size: 13px;
+            color: #718096;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            font-size: 11px;
+            padding: 5px 9px;
+            border-radius: 20px;
+            white-space: nowrap;
+            text-transform: capitalize;
+            font-weight: bold;
+        }
+
+        .pending {
+            background: #fff2d8;
+            color: #946200;
+        }
+
+        .completed {
+            background: #e0f5e9;
+            color: #168348;
+        }
+
+        .cancelled {
+            background: #ffe5e5;
+            color: #c53030;
+        }
+
+        .reminder-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .reminder-actions button {
+            font-size: 12px;
+            padding: 8px 11px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #718096;
+            padding: 35px 10px;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 15px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #e0f5e9;
+            color: #168348;
+        }
+
+        .error {
+            background: #ffe5e5;
+            color: #c53030;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-buttons button { flex: 1; }
+
+        .loading {
+            text-align: center;
+            color: #718096;
+            padding: 25px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #718096;
+            font-size: 13px;
+        }
+
+        @media (max-width: 800px) {
+            .main-grid { grid-template-columns: 1fr; }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav { gap: 12px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { width: 94%; }
+            .panel { padding: 17px; }
+
+            .reminder-top { flex-direction: column; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>📚 StudyHub</h2>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="library.html">Library</a>
+        <a href="timetable.html">Timetable</a>
+        <a href="timer.html">Study Timer</a>
+        <a href="goals.html">Goals</a>
+        <a href="reminders.html">Reminders</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <div class="page-heading">
+        <h1>Reminders & Notifications 🔔</h1>
+        <p>Organize your academic activities and never forget important tasks.</p>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <!-- PUSH NOTIFICATIONS -->
+    <section class="notification-panel">
+
+        <h3>🔔 Push Notifications & Sound</h3>
+
+        <p>
+            Enable notifications to receive StudyHub reminders.
+            When this page is open, StudyHub can also play a sound
+            when a reminder notification arrives.
+        </p>
+
+        <div class="notification-buttons">
+
+            <button
+                type="button"
+                class="enable-btn"
+                id="enableNotificationsBtn"
+                onclick="enablePushNotifications()"
+            >
+                🔔 Enable Notifications
+            </button>
+
+            <button
+                type="button"
+                class="disable-btn"
+                id="disableNotificationsBtn"
+                onclick="disablePushNotifications()"
+                style="display:none;"
+            >
+                Disable Notifications
+            </button>
+
+        </div>
+
+        <span id="notificationStatus">
+            Checking notification status...
+        </span>
+
+    </section>
+
+    <!-- SUMMARY -->
+    <div class="summary">
+
+        <div class="summary-card">
+            <p>Total Reminders</p>
+            <h2 id="totalReminders">0</h2>
+        </div>
+
+        <div class="summary-card">
+            <p>Pending</p>
+            <h2 id="pendingReminders">0</h2>
+        </div>
+
+        <div class="summary-card">
+            <p>Completed</p>
+            <h2 id="completedReminders">0</h2>
+        </div>
+
+        <div class="summary-card">
+            <p>Cancelled</p>
+            <h2 id="cancelledReminders">0</h2>
+        </div>
+
+    </div>
+
+    <div class="main-grid">
+
+        <!-- CREATE / EDIT FORM -->
+        <section class="panel">
+
+            <h2 id="formHeading">➕ Create Reminder</h2>
+
+            <form id="reminderForm">
+
+                <div class="form-group">
+                    <label for="title">Reminder Title</label>
+                    <input
+                        type="text"
+                        id="title"
+                        maxlength="150"
+                        placeholder="Enter reminder title"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea
+                        id="description"
+                        placeholder="Enter reminder details..."
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="reminderDate">Reminder Date</label>
+                    <input type="date" id="reminderDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reminderTime">Reminder Time</label>
+                    <input type="time" id="reminderTime" required>
+                </div>
+
+                <div class="form-buttons">
+
+                    <button type="submit" class="primary-btn" id="saveBtn">
+                        Save Reminder
+                    </button>
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        id="cancelEditBtn"
+                        style="display:none;"
+                        onclick="resetForm()"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+        <!-- REMINDER LIST -->
+        <section class="panel">
+
+            <h2>📋 My Reminders</h2>
+
+            <div class="form-group">
+                <label for="filterStatus">Filter Reminders</label>
+
+                <select id="filterStatus" onchange="renderReminders()">
+                    <option value="all">All Reminders</option>
+                    <option value="pending">Pending</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+
+            <div id="reminderList" class="reminder-list">
+                <div class="loading">Loading reminders...</div>
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 StudyHub. Academic Management System.
+</footer>
+
+<script>
+    // API CONFIGURATION
+    const API_URL = 'http://localhost:5000/api/reminders';
+    const PUSH_API_URL = 'http://localhost:5000/api/push';
+
+    const token = sessionStorage.getItem('studyhubToken');
+
+    const reminderForm = document.getElementById('reminderForm');
+    const reminderList = document.getElementById('reminderList');
+    const messageBox = document.getElementById('message');
+
+    let reminders = [];
+    let editingReminderId = null;
+    let serviceWorkerRegistration = null;
+    let audioContext = null;
+
+    // CHECK LOGIN
+    if (!token) {
+        alert('Please login first to access your reminders.');
+        window.location.href = 'login.html';
+    }
+
+    // DISPLAY MESSAGE
+    function showMessage(message, type) {
+        messageBox.textContent = message;
+        messageBox.className = 'message ' + type;
+        messageBox.style.display = 'block';
+
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+        }, 4000);
+    }
+
+    // API REQUEST
+    async function apiRequest(url, method = 'GET', data = null) {
+
+        const options = {
+            method,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        if (data !== null) {
+            options.body = JSON.stringify(data);
+        }
+
+        const response = await fetch(url, options);
+
+        let result;
+
+        try {
+            result = await response.json();
+        } catch {
+            throw new Error('Invalid server response.');
+        }
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Something went wrong.');
+        }
+
+        return result;
+    }
+
+    // LOAD REMINDERS
+    async function loadReminders() {
+
+        reminderList.innerHTML =
+            '<div class="loading">Loading reminders...</div>';
+
+        try {
+            const result = await apiRequest(API_URL);
+
+            reminders = result.reminders || [];
+
+            updateSummary();
+            renderReminders();
+
+        } catch (error) {
+
+            reminderList.innerHTML = `
+                <div class="empty-state">
+                    ${escapeHTML(error.message)}
+                </div>
+            `;
+
+            showMessage(error.message, 'error');
+        }
+    }
+
+    // UPDATE SUMMARY
+    function updateSummary() {
+
+        document.getElementById('totalReminders').textContent =
+            reminders.length;
+
+        document.getElementById('pendingReminders').textContent =
+            reminders.filter(r => r.status === 'pending').length;
+
+        document.getElementById('completedReminders').textContent =
+            reminders.filter(r => r.status === 'completed').length;
+
+        document.getElementById('cancelledReminders').textContent =
+            reminders.filter(r => r.status === 'cancelled').length;
+    }
+
+    // FORMAT DATE
+    function formatDate(date) {
+
+        const dateOnly = String(date).substring(0, 10);
+        const parts = dateOnly.split('-');
+
+        if (parts.length !== 3) return dateOnly;
+
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    // DISPLAY REMINDERS
+    function renderReminders() {
+
+        const filter = document.getElementById('filterStatus').value;
+
+        const filteredReminders = reminders.filter(reminder => {
+            return filter === 'all' || reminder.status === filter;
+        });
+
+        if (filteredReminders.length === 0) {
+
+            reminderList.innerHTML = `
+                <div class="empty-state">
+                    <h3>No reminders found</h3>
+                    <p>Create a new reminder to get started.</p>
+                </div>
+            `;
+
+            return;
+        }
+
+        reminderList.innerHTML = filteredReminders.map(reminder => {
+
+            const date = formatDate(reminder.reminder_date);
+            const time = String(reminder.reminder_time).substring(0, 5);
+
+            return `
+                <div class="reminder-card">
+
+                    <div class="reminder-top">
+
+                        <div>
+                            <h3>${escapeHTML(reminder.title)}</h3>
+
+                            <p>
+                                📅 ${date} &nbsp; | &nbsp; ⏰ ${time}
+                            </p>
+                        </div>
+
+                        <span class="status ${escapeHTML(reminder.status)}">
+                            ${escapeHTML(reminder.status.replace('_', ' '))}
+                        </span>
+
+                    </div>
+
+                    <p>
+                        ${escapeHTML(
+                            reminder.description || 'No description provided.'
+                        )}
+                    </p>
+
+                    <div class="reminder-actions">
+
+                        <button
+                            class="edit-btn"
+                            onclick="editReminder(${Number(reminder.id)})"
+                        >
+                            Edit
+                        </button>
+
+                        ${
+                            reminder.status !== 'completed'
+                            ? `<button
+                                class="complete-btn"
+                                onclick="changeStatus(${Number(reminder.id)}, 'completed')"
+                            >Complete</button>`
+                            : ''
+                        }
+
+                        ${
+                            reminder.status !== 'cancelled'
+                            ? `<button
+                                class="cancel-btn"
+                                onclick="changeStatus(${Number(reminder.id)}, 'cancelled')"
+                            >Cancel</button>`
+                            : ''
+                        }
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteReminder(${Number(reminder.id)})"
+                        >
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join('');
+    }
+
+    // ESCAPE HTML
+    function escapeHTML(value) {
+
+        return String(value).replace(/[&<>"']/g, character => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        })[character]);
+    }
+
+    // CREATE OR UPDATE REMINDER
+    reminderForm.addEventListener('submit', async function(event) {
+
+        event.preventDefault();
+
+        const data = {
+            title: document.getElementById('title').value.trim(),
+            description: document.getElementById('description').value.trim(),
+            reminder_date: document.getElementById('reminderDate').value,
+            reminder_time: document.getElementById('reminderTime').value
+        };
+
+        const saveBtn = document.getElementById('saveBtn');
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        try {
+
+            if (editingReminderId !== null) {
+
+                await apiRequest(
+                    `${API_URL}/${editingReminderId}`,
+                    'PUT',
+                    data
+                );
+
+                showMessage('Reminder updated successfully.', 'success');
+
+            } else {
+
+                await apiRequest(API_URL, 'POST', data);
+
+                showMessage('Reminder created successfully.', 'success');
+            }
+
+            resetForm();
+            await loadReminders();
+
+        } catch (error) {
+
+            showMessage(error.message, 'error');
+
+        } finally {
+
+            saveBtn.disabled = false;
+
+            saveBtn.textContent = editingReminderId !== null
+                ? 'Update Reminder'
+                : 'Save Reminder';
+        }
+    });
+
+    // EDIT REMINDER
+    function editReminder(id) {
+
+        const reminder = reminders.find(
+            r => Number(r.id) === Number(id)
+        );
+
+        if (!reminder) return;
+
+        editingReminderId = id;
+
+        document.getElementById('title').value = reminder.title;
+
+        document.getElementById('description').value =
+            reminder.description || '';
+
+        document.getElementById('reminderDate').value =
+            String(reminder.reminder_date).substring(0, 10);
+
+        document.getElementById('reminderTime').value =
+            String(reminder.reminder_time).substring(0, 5);
+
+        document.getElementById('formHeading').textContent =
+            '✏️ Edit Reminder';
+
+        document.getElementById('saveBtn').textContent =
+            'Update Reminder';
+
+        document.getElementById('cancelEditBtn').style.display = 'block';
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    // RESET FORM
+    function resetForm() {
+
+        reminderForm.reset();
+
+        editingReminderId = null;
+
+        document.getElementById('formHeading').textContent =
+            '➕ Create Reminder';
+
+        document.getElementById('saveBtn').textContent =
+            'Save Reminder';
+
+        document.getElementById('cancelEditBtn').style.display = 'none';
+    }
+
+    // CHANGE REMINDER STATUS
+    async function changeStatus(id, status) {
+
+        try {
+
+            await apiRequest(
+                `${API_URL}/${id}`,
+                'PUT',
+                { status }
+            );
+
+            showMessage(`Reminder marked as ${status}.`, 'success');
+
+            await loadReminders();
+
+        } catch (error) {
+
+            showMessage(error.message, 'error');
+        }
+    }
+
+    // DELETE REMINDER
+    async function deleteReminder(id) {
+
+        const confirmed = confirm(
+            'Are you sure you want to delete this reminder?'
+        );
+
+        if (!confirmed) return;
+
+        try {
+
+            await apiRequest(
+                `${API_URL}/${id}`,
+                'DELETE'
+            );
+
+            showMessage('Reminder deleted successfully.', 'success');
+
+            await loadReminders();
+
+        } catch (error) {
+
+            showMessage(error.message, 'error');
+        }
+    }
+
+    // CONVERT VAPID PUBLIC KEY
+    function urlBase64ToUint8Array(base64String) {
+
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+
+        const base64 = (base64String + padding)
+            .replace(/-/g, '+')
+            .replace(/_/g, '/');
+
+        const rawData = window.atob(base64);
+
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+
+        return outputArray;
+    }
+
+    // UPDATE NOTIFICATION STATUS
+    function updateNotificationStatus() {
+
+        const status = document.getElementById('notificationStatus');
+        const enableBtn = document.getElementById('enableNotificationsBtn');
+        const disableBtn = document.getElementById('disableNotificationsBtn');
+
+        if (!('Notification' in window)) {
+
+            status.textContent = 'This browser does not support notifications.';
+            enableBtn.disabled = true;
+            disableBtn.style.display = 'none';
+            return;
+        }
+
+        if (Notification.permission === 'denied') {
+
+            status.textContent =
+                'Notifications are blocked. Allow them in browser settings.';
+
+            enableBtn.disabled = true;
+            disableBtn.style.display = 'none';
+            return;
+        }
+
+        if (Notification.permission !== 'granted') {
+
+            status.textContent = 'Notifications are not enabled yet.';
+            enableBtn.disabled = false;
+            disableBtn.style.display = 'none';
+            return;
+        }
+
+        status.textContent = 'Checking your StudyHub subscription...';
+    }
+
+    // REGISTER SERVICE WORKER
+    async function registerStudyHubServiceWorker() {
+
+        if (!('serviceWorker' in navigator)) {
+            throw new Error('This browser does not support Service Workers.');
+        }
+
+        serviceWorkerRegistration =
+            await navigator.serviceWorker.register('./service-worker.js');
+
+        await navigator.serviceWorker.ready;
+
+        return serviceWorkerRegistration;
+    }
+
+    // ENABLE PUSH NOTIFICATIONS
+    async function enablePushNotifications() {
+
+        const enableBtn = document.getElementById('enableNotificationsBtn');
+        const status = document.getElementById('notificationStatus');
+
+        try {
+
+            enableBtn.disabled = true;
+            enableBtn.textContent = 'Enabling...';
+
+            if (!window.isSecureContext) {
+                throw new Error(
+                    'Notifications require HTTPS or localhost.'
+                );
+            }
+
+            if (!('PushManager' in window)) {
+                throw new Error(
+                    'Push notifications are not supported by this browser.'
+                );
+            }
+
+            // Unlock audio after user interaction
+            if ('AudioContext' in window || 'webkitAudioContext' in window) {
+
+                const AudioContextClass =
+                    window.AudioContext || window.webkitAudioContext;
+
+                audioContext = audioContext || new AudioContextClass();
+
+                if (audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+            }
+
+            // Request browser permission
+            const permission = await Notification.requestPermission();
+
+            if (permission !== 'granted') {
+                throw new Error('Notification permission was not granted.');
+            }
+
+            // Register service worker
+            const registration =
+                await registerStudyHubServiceWorker();
+
+            // Get public VAPID key from backend
+            const keyResponse = await fetch(
+                `${PUSH_API_URL}/public-key`
+            );
+
+            const keyResult = await keyResponse.json();
+
+            if (!keyResponse.ok || !keyResult.publicKey) {
+                throw new Error(
+                    keyResult.message || 'Could not get VAPID public key.'
+                );
+            }
+
+            const applicationServerKey =
+                urlBase64ToUint8Array(keyResult.publicKey);
+
+            // Check for existing subscription
+            let subscription =
+                await registration.pushManager.getSubscription();
+
+            if (!subscription) {
+
+                subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey
+                });
+            }
+
+            // Save subscription to backend
+            await apiRequest(
+                `${PUSH_API_URL}/subscribe`,
+                'POST',
+                subscription.toJSON()
+            );
+
+            status.textContent =
+                'Notifications are enabled successfully!';
+
+            showMessage(
+                'StudyHub notifications enabled successfully.',
+                'success'
+            );
+
+            updateNotificationButtons(true);
+
+        } catch (error) {
+
+            console.error('Enable notification error:', error);
+
+            status.textContent = error.message;
+
+            showMessage(error.message, 'error');
+
+            updateNotificationButtons(false);
+
+        } finally {
+
+            enableBtn.disabled = false;
+            enableBtn.textContent = '🔔 Enable Notifications';
+        }
+    }
+
+    // UPDATE BUTTONS
+    function updateNotificationButtons(enabled) {
+
+        document.getElementById('enableNotificationsBtn').style.display =
+            enabled ? 'none' : 'inline-block';
+
+        document.getElementById('disableNotificationsBtn').style.display =
+            enabled ? 'inline-block' : 'none';
+    }
+
+    // CHECK EXISTING SUBSCRIPTION
+    async function checkPushSubscription() {
+
+        try {
+
+            if (!('serviceWorker' in navigator) ||
+                !('PushManager' in window)) {
+
+                updateNotificationStatus();
+                return;
+            }
+
+            const registration =
+                await registerStudyHubServiceWorker();
+
+            const subscription =
+                await registration.pushManager.getSubscription();
+
+            if (subscription && Notification.permission === 'granted') {
+
+                updateNotificationButtons(true);
+
+                document.getElementById('notificationStatus').textContent =
+                    'StudyHub notifications are enabled on this browser.';
+
+            } else {
+
+                updateNotificationButtons(false);
+                updateNotificationStatus();
+            }
+
+        } catch (error) {
+
+            console.error('Subscription check error:', error);
+
+            document.getElementById('notificationStatus').textContent =
+                'Could not check notification status.';
+        }
+    }
+
+    // DISABLE PUSH NOTIFICATIONS
+    async function disablePushNotifications() {
+
+        const confirmed = confirm(
+            'Do you want to disable StudyHub notifications on this browser?'
+        );
+
+        if (!confirmed) return;
+
+        try {
+
+            const registration =
+                await registerStudyHubServiceWorker();
+
+            const subscription =
+                await registration.pushManager.getSubscription();
+
+            if (subscription) {
+
+                await apiRequest(
+                    `${PUSH_API_URL}/unsubscribe`,
+                    'POST',
+                    {
+                        endpoint: subscription.endpoint
+                    }
+                );
+
+                await subscription.unsubscribe();
+            }
+
+            updateNotificationButtons(false);
+
+            document.getElementById('notificationStatus').textContent =
+                'StudyHub notifications have been disabled.';
+
+            showMessage(
+                'Notifications disabled successfully.',
+                'success'
+            );
+
+        } catch (error) {
+
+            console.error('Disable notification error:', error);
+
+            showMessage(error.message, 'error');
+        }
+    }
+
+    // PLAY SOUND ALERT
+    function playReminderSound() {
+
+        try {
+
+            const AudioContextClass =
+                window.AudioContext || window.webkitAudioContext;
+
+            if (!AudioContextClass) return;
+
+            audioContext = audioContext || new AudioContextClass();
+
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(
+                880,
+                audioContext.currentTime
+            );
+
+            gain.gain.setValueAtTime(
+                0.3,
+                audioContext.currentTime
+            );
+
+            gain.gain.exponentialRampToValueAtTime(
+                0.001,
+                audioContext.currentTime + 0.7
+            );
+
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.7);
+
+        } catch (error) {
+
+            console.error('Sound alert error:', error);
+        }
+    }
+
+    // RECEIVE MESSAGE FROM SERVICE WORKER
+    if ('serviceWorker' in navigator) {
+
+        navigator.serviceWorker.addEventListener('message', event => {
+
+            if (event.data && event.data.type === 'STUDYHUB_REMINDER') {
+
+                playReminderSound();
+
+                showMessage(
+                    event.data.title || 'You have a new reminder.',
+                    'success'
+                );
+
+                loadReminders();
+            }
+        });
+    }
+
+    // INITIALIZE PAGE
+    async function initializePage() {
+
+        if (!token) return;
+
+        loadReminders();
+        await checkPushSubscription();
+    }
+
+    if (token) {
+        initializePage();
+    }
+
+</script>
+
+</body>
+</html>

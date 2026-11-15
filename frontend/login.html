@@ -1,0 +1,288 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#087fbe">
+
+    <title>Login | StudyHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f7fb;
+            color: #263445;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 430px;
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.07);
+        }
+
+        .brand {
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #087fbe;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d7e0e9;
+            border-radius: 7px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #087fbe;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 7px;
+            background: #087fbe;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        button:hover {
+            background: #06689c;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #message {
+            display: none;
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .forgot-password-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .forgot-password-link a {
+            color: #087fbe;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .forgot-password-link a:hover {
+            text-decoration: underline;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #087fbe;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="brand">StudyHub</div>
+
+        <p class="subtitle">
+            YOUR ACADEMIC LIFE, ORGANIZED
+        </p>
+
+        <h2>Welcome Back!</h2>
+
+        <p class="description">
+            Login to continue your academic journey.
+        </p>
+
+        <div id="message" role="alert"></div>
+
+        <form id="loginForm">
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+
+            <button type="submit" id="loginButton">
+                Sign In
+            </button>
+
+        </form>
+
+        <!-- FORGOT PASSWORD LINK -->
+        <p class="forgot-password-link">
+            <a href="forgot-password.html">Forgot Password?</a>
+        </p>
+
+        <p class="register-link">
+            Don't have an account?
+            <a href="register.html">Create Account</a>
+        </p>
+
+    </div>
+
+   ```html
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const message = document.getElementById('message');
+    const loginButton = document.getElementById('loginButton');
+
+    function showMessage(text, success = false) {
+        message.style.display = 'block';
+        message.textContent = text;
+
+        message.style.background = success
+            ? '#e6f7ed'
+            : '#fdeaea';
+
+        message.style.color = success
+            ? '#176b39'
+            : '#a12626';
+    }
+
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        loginButton.disabled = true;
+        loginButton.textContent = 'Signing In...';
+        message.style.display = 'none';
+
+        try {
+            const response = await fetch(
+                'http://localhost:5000/api/auth/login',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Login failed.');
+            }
+
+            sessionStorage.setItem('studyhubToken', data.token);
+
+            sessionStorage.setItem(
+                'studyhubStudent',
+                JSON.stringify(data.student)
+            );
+
+            showMessage('Login successful! Redirecting...', true);
+
+            if (data.student.mustChangePassword === true) {
+                window.location.href = 'force-change-password.html';
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+
+        } catch (error) {
+            showMessage(
+                error.message.includes('Failed to fetch')
+                    ? 'Cannot connect to StudyHub server.'
+                    : error.message
+            );
+
+            loginButton.disabled = false;
+            loginButton.textContent = 'Sign In';
+        }
+    });
+</script>
+```
+
+</body>
+</html>
+```

@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#087fbe">
+    <title>Register | StudyHub</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f7fb;
+            color: #263445;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 15px;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 520px;
+            padding: 35px;
+            border-radius: 14px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.07);
+        }
+
+        .brand {
+            text-align: center;
+            color: #087fbe;
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d7e0e9;
+            border-radius: 7px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #087fbe;
+            box-shadow: 0 0 0 2px rgba(8,127,190,0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 7px;
+            background: #087fbe;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        button:hover {
+            background: #06689c;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #message {
+            display: none;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #087fbe;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="brand">StudyHub</div>
+    <p class="subtitle">YOUR ACADEMIC LIFE, ORGANIZED</p>
+
+    <h2>Create Your Account</h2>
+    <p class="description">Join StudyHub and manage your academic journey.</p>
+
+    <div id="message" role="alert"></div>
+
+    <form id="registerForm">
+
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" required
+                   placeholder="Enter your full name">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" required
+                   placeholder="Enter your email">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" minlength="8"
+                   required placeholder="At least 8 characters">
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" required
+                   placeholder="Confirm your password">
+        </div>
+
+        <div class="form-group">
+            <label for="institutionName">University / College Name</label>
+            <input type="text" id="institutionName" maxlength="200"
+                   required placeholder="Type your university or college">
+        </div>
+
+        <div class="form-group">
+            <label for="programme">Programme</label>
+            <input type="text" id="programme" maxlength="200"
+                   required placeholder="Enter your programme">
+        </div>
+
+        <div class="form-group">
+            <label for="yearOfStudy">Year of Study</label>
+            <select id="yearOfStudy" required>
+                <option value="">Select your year</option>
+                <option value="1">Year 1</option>
+                <option value="2">Year 2</option>
+                <option value="3">Year 3</option>
+                <option value="4">Year 4</option>
+                <option value="5">Year 5</option>
+                <option value="6">Year 6</option>
+            </select>
+        </div>
+
+        <button type="submit" id="registerButton">
+            Create Account
+        </button>
+
+    </form>
+
+    <p class="login-link">
+        Already have an account?
+        <a href="login.html">Sign In</a>
+    </p>
+
+</div>
+
+<script>
+    const form = document.getElementById('registerForm');
+    const message = document.getElementById('message');
+    const button = document.getElementById('registerButton');
+
+    function showMessage(text, success = false) {
+        message.style.display = 'block';
+        message.textContent = text;
+        message.style.background = success ? '#e6f7ed' : '#fdeaea';
+        message.style.color = success ? '#176b39' : '#a12626';
+    }
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const fullName = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const institutionName = document.getElementById('institutionName').value.trim();
+        const programme = document.getElementById('programme').value.trim();
+        const yearOfStudy = Number(document.getElementById('yearOfStudy').value);
+
+        if (password !== confirmPassword) {
+            showMessage('Passwords do not match.');
+            return;
+        }
+
+        if (password.length < 8) {
+            showMessage('Password must contain at least 8 characters.');
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = 'Creating Account...';
+        message.style.display = 'none';
+
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fullName,
+                    email,
+                    password,
+                    institutionName,
+                    programme,
+                    yearOfStudy
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Registration failed.');
+            }
+
+            showMessage('Account created successfully! You can now sign in.', true);
+            form.reset();
+
+        } catch (error) {
+            showMessage(
+                error.message.includes('Failed to fetch')
+                    ? 'Cannot connect to StudyHub server. Please try again.'
+                    : error.message
+            );
+        } finally {
+            button.disabled = false;
+            button.textContent = 'Create Account';
+        }
+    });
+</script>
+
+</body>
+</html>

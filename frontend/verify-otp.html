@@ -1,0 +1,321 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#087fbe">
+
+    <title>Verify OTP | StudyHub</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f7fb;
+            color: #263445;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 430px;
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.07);
+        }
+
+        .brand {
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #087fbe;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d7e0e9;
+            border-radius: 7px;
+            font-size: 20px;
+            letter-spacing: 7px;
+            text-align: center;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #087fbe;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 7px;
+            background: #087fbe;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        button:hover {
+            background: #06689c;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #message {
+            display: none;
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 7px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #087fbe;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="brand">StudyHub</div>
+
+        <p class="subtitle">
+            YOUR ACADEMIC LIFE, ORGANIZED
+        </p>
+
+        <h2>Verify Your Email</h2>
+
+        <p class="description">
+            Enter the six-digit verification code sent
+            to your registered email address.
+        </p>
+
+        <div id="message" role="alert"></div>
+
+        <form id="verifyOTPForm">
+
+            <div class="form-group">
+
+                <label for="otp">Verification Code</label>
+
+                <input
+                    type="text"
+                    id="otp"
+                    placeholder="000000"
+                    inputmode="numeric"
+                    maxlength="6"
+                    pattern="[0-9]{6}"
+                    autocomplete="one-time-code"
+                    required
+                >
+
+            </div>
+
+            <button type="submit" id="verifyButton">
+                Verify OTP
+            </button>
+
+        </form>
+
+        <p class="login-link">
+            <a href="login.html">Back to Login</a>
+        </p>
+
+    </div>
+
+    <script>
+
+        const verifyOTPForm =
+            document.getElementById('verifyOTPForm');
+
+        const otpInput =
+            document.getElementById('otp');
+
+        const message =
+            document.getElementById('message');
+
+        const verifyButton =
+            document.getElementById('verifyButton');
+
+
+        // Get email saved from Forgot Password page
+        const email = sessionStorage.getItem('studyhubResetEmail');
+
+
+        if (!email) {
+
+            alert('Please enter your email address first.');
+
+            window.location.href = 'forgot-password.html';
+
+        }
+
+
+        function showMessage(text, success = false) {
+
+            message.style.display = 'block';
+
+            message.textContent = text;
+
+            message.style.background = success
+                ? '#e6f7ed'
+                : '#fdeaea';
+
+            message.style.color = success
+                ? '#176b39'
+                : '#a12626';
+
+        }
+
+
+        // Allow numbers only
+        otpInput.addEventListener('input', () => {
+
+            otpInput.value = otpInput.value
+                .replace(/\D/g, '')
+                .slice(0, 6);
+
+        });
+
+
+        verifyOTPForm.addEventListener('submit', async (event) => {
+
+            event.preventDefault();
+
+            const otp = otpInput.value.trim();
+
+            if (!/^\d{6}$/.test(otp)) {
+
+                showMessage('Please enter a valid six-digit OTP.');
+
+                return;
+
+            }
+
+            verifyButton.disabled = true;
+            verifyButton.textContent = 'Verifying...';
+
+            message.style.display = 'none';
+
+            try {
+
+                const response = await fetch(
+                    'http://localhost:5000/api/auth/verify-reset-otp',
+                    {
+                        method: 'POST',
+
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+
+                        body: JSON.stringify({
+                            email: email,
+                            otp: otp
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message || 'OTP verification failed.'
+                    );
+
+                }
+
+                // Save reset token for password reset page
+                sessionStorage.setItem(
+                    'studyhubResetToken',
+                    data.resetToken
+                );
+
+                showMessage(
+                    'OTP verified successfully! Redirecting...',
+                    true
+                );
+
+                window.location.href = 'reset-password.html';
+
+            } catch (error) {
+
+                showMessage(
+                    error.message.includes('Failed to fetch')
+                        ? 'Cannot connect to StudyHub server.'
+                        : error.message
+                );
+
+                verifyButton.disabled = false;
+                verifyButton.textContent = 'Verify OTP';
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
+```

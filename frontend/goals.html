@@ -1,0 +1,1070 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goals & Tasks | StudyHub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #263238;
+        }
+
+        header {
+            background: #087fbe;
+            color: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 {
+            font-size: 23px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            margin-bottom: 8px;
+            color: #17324d;
+        }
+
+        .page-heading p {
+            color: #718096;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .summary-card h3 {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .summary-card p {
+            font-size: 28px;
+            font-weight: bold;
+            color: #087fbe;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+            color: #17324d;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d5dce5;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #087fbe;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            border: none;
+            padding: 11px 17px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .primary-btn {
+            background: #087fbe;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #06699f;
+        }
+
+        .secondary-btn {
+            background: #e8eef4;
+            color: #263238;
+        }
+
+        .edit-btn {
+            background: #fff0ce;
+            color: #946200;
+        }
+
+        .delete-btn {
+            background: #ffe1e1;
+            color: #c62828;
+        }
+
+        .complete-btn {
+            background: #d8f5e3;
+            color: #18733a;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .item-card {
+            border: 1px solid #e1e7ee;
+            border-radius: 9px;
+            padding: 18px;
+            background: #fff;
+        }
+
+        .item-card h3 {
+            color: #17324d;
+            margin-bottom: 10px;
+        }
+
+        .item-card p {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 9px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .card-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            background: #eaf2ff;
+            color: #2361a5;
+            margin-bottom: 12px;
+        }
+
+        .badge.completed {
+            background: #d8f5e3;
+            color: #18733a;
+        }
+
+        .badge.cancelled {
+            background: #ffe1e1;
+            color: #c62828;
+        }
+
+        .badge.high {
+            background: #ffe1e1;
+            color: #c62828;
+        }
+
+        .badge.medium {
+            background: #fff0ce;
+            color: #946200;
+        }
+
+        .badge.low {
+            background: #e5efff;
+            color: #2361a5;
+        }
+
+        .empty {
+            color: #718096;
+            text-align: center;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: #d8f5e3;
+            color: #18733a;
+            display: block;
+        }
+
+        .message.error {
+            background: #ffe1e1;
+            color: #c62828;
+            display: block;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .section-heading button {
+            margin-bottom: 15px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #718096;
+            font-size: 13px;
+        }
+
+        @media(max-width: 650px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .section {
+                padding: 17px;
+            }
+
+            .container {
+                width: 94%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>📚 StudyHub</h2>
+    <a href="dashboard.html">← Back to Dashboard</a>
+</header>
+
+<div class="container">
+
+    <div class="page-heading">
+        <h1>Goals & Tasks Management</h1>
+        <p>Organize your academic goals, assignments and daily activities.</p>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary">
+
+        <div class="summary-card">
+            <h3>Total Goals</h3>
+            <p id="totalGoals">0</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Active Goals</h3>
+            <p id="activeGoals">0</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Total Tasks</h3>
+            <p id="totalTasks">0</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Completed Tasks</h3>
+            <p id="completedTasks">0</p>
+        </div>
+
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <!-- GOALS FORM -->
+    <div class="section">
+
+        <h2>🎯 Create Academic Goal</h2>
+
+        <form id="goalForm">
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+                    <label for="goalTitle">Goal Title</label>
+                    <input type="text" id="goalTitle"
+                        placeholder="e.g. Complete Database Assignment"
+                        maxlength="150" required>
+                </div>
+
+                <div class="form-group full">
+                    <label for="goalDescription">Description</label>
+                    <textarea id="goalDescription"
+                        placeholder="Describe your academic goal..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="goalDate">Target Date</label>
+                    <input type="date" id="goalDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="goalPriority">Priority</label>
+                    <select id="goalPriority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <button type="submit" class="primary-btn">
+                + Create Goal
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- GOALS LIST -->
+    <div class="section">
+
+        <h2>My Academic Goals</h2>
+
+        <div id="goalsList" class="cards-grid">
+            <p class="empty">Loading goals...</p>
+        </div>
+
+    </div>
+
+    <!-- TASK FORM -->
+    <div class="section">
+
+        <h2>📝 Create New Task</h2>
+
+        <form id="taskForm">
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+                    <label for="taskTitle">Task Title</label>
+                    <input type="text" id="taskTitle"
+                        placeholder="e.g. Read Chapter Three"
+                        maxlength="150" required>
+                </div>
+
+                <div class="form-group full">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription"
+                        placeholder="Describe your task..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskGoal">Connect to Goal (Optional)</label>
+                    <select id="taskGoal">
+                        <option value="">No Goal Selected</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskDate">Due Date</label>
+                    <input type="date" id="taskDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="taskPriority">Priority</label>
+                    <select id="taskPriority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <button type="submit" class="primary-btn">
+                + Create Task
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- TASK LIST -->
+    <div class="section">
+
+        <div class="section-heading">
+            <h2>My Tasks</h2>
+
+            <button class="secondary-btn" onclick="loadData()">
+                ↻ Refresh
+            </button>
+        </div>
+
+        <div id="tasksList" class="cards-grid">
+            <p class="empty">Loading tasks...</p>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    StudyHub © 2026 | Academic Management System
+</footer>
+
+
+<script>
+
+    // API CONFIGURATION
+    const API_URL = 'http://localhost:5000/api';
+
+    const token = sessionStorage.getItem('studyhubToken');
+
+    let goals = [];
+    let tasks = [];
+
+    // CHECK LOGIN
+    if (!token) {
+        alert('Your session has expired. Please login again.');
+        window.location.href = 'login.html';
+    }
+
+
+    // API REQUEST FUNCTION
+    async function apiRequest(endpoint, method = 'GET', body = null) {
+
+        const options = {
+            method: method,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        if (body !== null) {
+            options.body = JSON.stringify(body);
+        }
+
+        const response = await fetch(`${API_URL}${endpoint}`, options);
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong.');
+        }
+
+        return data;
+    }
+
+
+    // SHOW MESSAGE
+    function showMessage(message, type = 'success') {
+
+        const box = document.getElementById('message');
+
+        box.textContent = message;
+        box.className = `message ${type}`;
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
+        setTimeout(() => {
+            box.style.display = 'none';
+        }, 4000);
+    }
+
+
+    // ESCAPE HTML
+    function escapeHTML(value) {
+
+        return String(value ?? '').replace(/[&<>"']/g, char => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        })[char]);
+    }
+
+
+    // FORMAT DATE
+    function formatDate(date) {
+
+        if (!date) return 'Not set';
+
+        return new Date(date).toLocaleDateString();
+    }
+
+
+    // LOAD GOALS AND TASKS
+    async function loadData() {
+
+        try {
+
+            const [goalData, taskData] = await Promise.all([
+                apiRequest('/goals'),
+                apiRequest('/tasks')
+            ]);
+
+            goals = goalData.goals || [];
+            tasks = taskData.tasks || [];
+
+            displayGoals();
+            displayTasks();
+            updateSummary();
+            updateGoalOptions();
+
+        } catch (error) {
+
+            showMessage(error.message, 'error');
+
+            document.getElementById('goalsList').innerHTML =
+                '<p class="empty">Unable to load goals.</p>';
+
+            document.getElementById('tasksList').innerHTML =
+                '<p class="empty">Unable to load tasks.</p>';
+        }
+    }
+
+
+    // UPDATE SUMMARY
+    function updateSummary() {
+
+        document.getElementById('totalGoals').textContent =
+            goals.length;
+
+        document.getElementById('activeGoals').textContent =
+            goals.filter(goal => goal.status === 'active').length;
+
+        document.getElementById('totalTasks').textContent =
+            tasks.length;
+
+        document.getElementById('completedTasks').textContent =
+            tasks.filter(task => task.status === 'completed').length;
+    }
+
+
+    // DISPLAY GOALS
+    function displayGoals() {
+
+        const container = document.getElementById('goalsList');
+
+        if (goals.length === 0) {
+            container.innerHTML =
+                '<p class="empty">You have not created any goals yet.</p>';
+            return;
+        }
+
+        container.innerHTML = goals.map(goal => `
+
+            <div class="item-card">
+
+                <span class="badge ${escapeHTML(goal.status)}">
+                    ${escapeHTML(goal.status)}
+                </span>
+
+                <h3>${escapeHTML(goal.title)}</h3>
+
+                <p>${escapeHTML(goal.description || 'No description provided.')}</p>
+
+                <p><strong>Target:</strong>
+                    ${escapeHTML(formatDate(goal.target_date))}
+                </p>
+
+                <p><strong>Priority:</strong>
+                    <span class="badge ${escapeHTML(goal.priority)}">
+                        ${escapeHTML(goal.priority)}
+                    </span>
+                </p>
+
+                <div class="card-actions">
+
+                    <button class="edit-btn"
+                        onclick="editGoal(${Number(goal.id)})">
+                        Edit
+                    </button>
+
+                    ${goal.status !== 'completed' ? `
+                        <button class="complete-btn"
+                            onclick="completeGoal(${Number(goal.id)})">
+                            Complete
+                        </button>
+                    ` : ''}
+
+                    <button class="delete-btn"
+                        onclick="deleteGoal(${Number(goal.id)})">
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        `).join('');
+    }
+
+
+    // UPDATE GOAL SELECT OPTIONS
+    function updateGoalOptions() {
+
+        const select = document.getElementById('taskGoal');
+
+        select.innerHTML =
+            '<option value="">No Goal Selected</option>';
+
+        goals
+            .filter(goal => goal.status === 'active')
+            .forEach(goal => {
+
+                const option = document.createElement('option');
+
+                option.value = goal.id;
+                option.textContent = goal.title;
+
+                select.appendChild(option);
+            });
+    }
+
+
+    // CREATE GOAL
+    document.getElementById('goalForm')
+        .addEventListener('submit', async function(event) {
+
+            event.preventDefault();
+
+            const goal = {
+                title: document.getElementById('goalTitle').value,
+                description: document.getElementById('goalDescription').value,
+                target_date: document.getElementById('goalDate').value || null,
+                priority: document.getElementById('goalPriority').value
+            };
+
+            try {
+
+                const data = await apiRequest('/goals', 'POST', goal);
+
+                showMessage(data.message);
+
+                this.reset();
+
+                await loadData();
+
+            } catch (error) {
+
+                showMessage(error.message, 'error');
+            }
+        });
+
+
+    // EDIT GOAL
+    async function editGoal(id) {
+
+        const goal = goals.find(item => Number(item.id) === id);
+
+        if (!goal) return;
+
+        const title = prompt('Enter goal title:', goal.title);
+
+        if (title === null) return;
+
+        if (!title.trim()) {
+            showMessage('Goal title cannot be empty.', 'error');
+            return;
+        }
+
+        const description = prompt(
+            'Enter goal description:',
+            goal.description || ''
+        );
+
+        if (description === null) return;
+
+        const priority = prompt(
+            'Enter priority: low, medium or high',
+            goal.priority
+        );
+
+        if (priority === null) return;
+
+        if (!['low', 'medium', 'high'].includes(priority.trim().toLowerCase())) {
+            showMessage('Invalid priority.', 'error');
+            return;
+        }
+
+        const targetDate = prompt(
+            'Enter target date (YYYY-MM-DD), or leave blank:',
+            goal.target_date ? String(goal.target_date).slice(0, 10) : ''
+        );
+
+        if (targetDate === null) return;
+
+        try {
+
+            const data = await apiRequest(`/goals/${id}`, 'PUT', {
+                title: title.trim(),
+                description,
+                priority: priority.trim().toLowerCase(),
+                target_date: targetDate || null
+            });
+
+            showMessage(data.message);
+
+            await loadData();
+
+        } catch (error) {
+
+            showMessage(error.message, 'error');
+        }
+    }
+
+
+    // COMPLETE GOAL
+    async function completeGoal(id) {
+
+        if (!confirm('Mark this goal as completed?')) return;
+
+        try {
+
+            const data = await apiRequest(`/goals/${id}`, 'PUT', {
+                status: 'completed'
+            });
+
+            showMessage(data.message);
+
+            await loadData();
+
+        } catch (error) {
+
+            showMessage(error.message, 'error');
+        }
+    }
+
+
+    // DELETE GOAL
+    async function deleteGoal(id) {
+
+        if (!confirm('Are you sure you want to delete this goal?')) return;
+
+        try {
+
+            const data = await apiRequest(`/goals/${id}`, 'DELETE');
+
+            showMessage(data.message);
+
+            await loadData();
+
+        } catch (error) {
+
+            showMessage(error.message, 'error');
+        }
+    }
+
+
+    // CREATE TASK
+    document.getElementById('taskForm')
+        .addEventListener('submit', async function(event) {
+
+            event.preventDefault();
+
+            const selectedGoal = document.getElementById('taskGoal').value;
+
+            const task = {
+                title: document.getElementById('taskTitle').value,
+                description: document.getElementById('taskDescription').value,
+                goal_id: selectedGoal ? Number(selectedGoal) : null,
+                due_date: document.getElementById('taskDate').value || null,
+                priority: document.getElementById('taskPriority').value
+            };
+
+            try {
+
+                const data = await apiRequest('/tasks', 'POST', task);
+
+                showMessage(data.message);
+
+                this.reset();
+
+                await loadData();
+
+            } catch (error) {
+
+                showMessage(error.message, 'error');
+            }
+        });
+
+
+    // DISPLAY TASKS
+    function displayTasks() {
+
+        const container = document.getElementById('tasksList');
+
+        if (tasks.length === 0) {
+            container.innerHTML =
+                '<p class="empty">You have not created any tasks yet.</p>';
+            return;
+        }
+
+        container.innerHTML = tasks.map(task => `
+
+            <div class="item-card">
+
+                <span class="badge ${escapeHTML(task.status)}">
+                    ${escapeHTML(task.status.replace('_', ' '))}
+                </span>
+
+                <h3>${escapeHTML(task.title)}</h3>
+
+                <p>${escapeHTML(task.description || 'No description provided.')}</p>
+
+                <p><strong>Related Goal:</strong>
+                    ${escapeHTML(task.goal_title || 'No Goal')}
+                </p>
+
+                <p><strong>Due Date:</strong>
+                    ${escapeHTML(formatDate(task.due_date))}
+                </p>
+
+                <p><strong>Priority:</strong>
+                    <span class="badge ${escapeHTML(task.priority)}">
+                        ${escapeHTML(task.priority)}
+                    </span>
+                </p>
+
+                <div class="card-actions">
+
+                    <button class="edit-btn"
+                        onclick="editTask(${Number(task.id)})">
+                        Edit
+                    </button>
+
+                    ${task.status !== 'completed' ? `
+                        <button class="complete-btn"
+                            onclick="completeTask(${Number(task.id)})">
+                            Complete
+                        </button>
+                    ` : ''}
+
+                    ${task.status === 'pending' ? `
+                        <button class="secondary-btn"
+                            onclick="startTask(${Number(task.id)})">
+                            Start
+                        </button>
+                    ` : ''}
+
+                    <button class="delete-btn"
+                        onclick="deleteTask(${Number(task.id)})">
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        `).join('');
+    }
+
+
+    // EDIT TASK
+    async function editTask(id) {
+
+        const task = tasks.find(item => Number(item.id) === id);
+
+        if (!task) return;
+
+        const title = prompt('Enter task title:', task.title);
+
+        if (title === null) return;
+
+        if (!title.trim()) {
+            showMessage('Task title cannot be empty.', 'error');
+            return;
+        }
+
+        const description = prompt(
+            'Enter task description:',
+            task.description || ''
+        );
+
+        if (description === null) return;
+
+        const priority = prompt(
+            'Enter priority: low, medium or high',
+            task.priority
+        );
+
+        if (priority === null) return;
+
+        if (!['low', 'medium', 'high'].includes(priority.trim().toLowerCase())) {
+            showMessage('Invalid priority.', 'error');
+            return;
+        }
+
+        const dueDate = prompt(
+            'Enter due date (YYYY-MM-DD), or leave blank:',
+            task.due_date ? String(task.due_date).slice(0, 10) : ''
+        );
+
+        if (dueDate === null) return;
+
+        try {
+
+            const data = await apiRequest(`/tasks/${id}`, 'PUT', {
+                title: title.trim(),
+                description,
+                priority: priority.trim().toLowerCase(),
+                due_date: dueDate || null
+            });
+
+            showMessage(data.message);
+
+            await loadData();
+
+        } catch (error) {
+
+            showMessage(error.message, 'error');
+        }
+    }
+
+
+    // START TASK
+    async function startTask(id) {
+
+        try {
+
+            const data = await apiRequest(`/tasks/${id}`, 'PUT', {
+                status: 'in_progress'
+            });
+
+            showMessage(data.message);
+
+            await loadData();
+
+        } catch (error) {
+
+            showMessage(error.message, 'error');
+        }
+    }
+
+
+    // COMPLETE TASK
+    async function completeTask(id) {
+
+        try {
+
+            const data = await apiRequest(`/tasks/${id}`, 'PUT', {
+                status: 'completed'
+            });
+
+            showMessage(data.message);
+
+            await loadData();
+
+        } catch (error) {
+
+            showMessage(error.message, 'error');
+        }
+    }
+
+
+    // DELETE TASK
+    async function deleteTask(id) {
+
+        if (!confirm('Are you sure you want to delete this task?')) return;
+
+        try {
+
+            const data = await apiRequest(`/tasks/${id}`, 'DELETE');
+
+            showMessage(data.message);
+
+            await loadData();
+
+        } catch (error) {
+
+            showMessage(error.message, 'error');
+        }
+    }
+
+
+    // LOAD DATA WHEN PAGE OPENS
+    loadData();
+
+</script>
+
+</body>
+</html>

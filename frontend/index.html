@@ -1,0 +1,1534 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#087fbe">
+
+    <meta name="description" content="StudyHub is an academic management and productivity platform designed to help university and college students in Tanzania organize their academic life.">
+
+    <meta name="keywords" content="StudyHub, Tanzania students, academic management, student productivity, study planner, university students">
+
+    <title>StudyHub | Your Academic Life, Organized</title>
+
+    <style>
+        :root {
+            --primary: #087fbe;
+            --primary-dark: #06689c;
+            --primary-light: #eaf6fc;
+            --dark: #172b40;
+            --text: #526477;
+            --muted: #718096;
+            --background: #f3f7fb;
+            --white: #ffffff;
+            --border: #e5edf4;
+            --shadow: 0 12px 35px rgba(24, 55, 82, 0.09);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 85px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: var(--dark);
+            background: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        .container {
+            width: min(1160px, 92%);
+            margin: auto;
+        }
+
+        /* NAVIGATION */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255,255,255,0.96);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-content {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -1px;
+        }
+
+        .logo-icon {
+            width: 39px;
+            height: 39px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+            border-radius: 11px;
+            font-size: 22px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .login-btn {
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 700;
+            padding: 10px 15px;
+        }
+
+        .primary-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 23px;
+            border-radius: 7px;
+            background: var(--primary);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid var(--primary);
+            transition: 0.25s;
+            cursor: pointer;
+        }
+
+        .primary-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 13px 23px;
+            border: 1px solid #cbd9e5;
+            border-radius: 7px;
+            color: var(--dark);
+            background: white;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.25s;
+        }
+
+        .secondary-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .menu-toggle {
+            display: none;
+            border: none;
+            background: none;
+            font-size: 27px;
+            color: var(--dark);
+            cursor: pointer;
+        }
+
+        /* HERO SECTION */
+
+        .hero {
+            padding: 85px 0 95px;
+            background:
+                radial-gradient(circle at 85% 20%, #dff2fc 0, transparent 32%),
+                linear-gradient(135deg, #f5faff, #ffffff 65%);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 65px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 13px;
+            border-radius: 30px;
+            background: #e7f5fc;
+            color: var(--primary-dark);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 23px;
+        }
+
+        .hero-badge span {
+            width: 8px;
+            height: 8px;
+            background: #20a36b;
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-size: clamp(38px, 5vw, 58px);
+            line-height: 1.13;
+            letter-spacing: -2px;
+            margin-bottom: 23px;
+            color: var(--dark);
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero-description {
+            max-width: 530px;
+            font-size: 16px;
+            color: var(--text);
+            line-height: 1.9;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+            margin-bottom: 30px;
+        }
+
+        .hero-note {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* DASHBOARD PREVIEW */
+
+        .preview-wrapper {
+            position: relative;
+            padding: 15px;
+        }
+
+        .preview-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            box-shadow: 0 25px 65px rgba(20, 70, 105, 0.14);
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+        }
+
+        .preview-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 17px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .preview-brand {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .preview-avatar {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .preview-body {
+            padding: 22px;
+            background: #fbfdff;
+        }
+
+        .preview-welcome {
+            margin-bottom: 18px;
+        }
+
+        .preview-welcome h3 {
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+
+        .preview-welcome p {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .preview-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 17px;
+        }
+
+        .stat-card {
+            padding: 13px 10px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: white;
+        }
+
+        .stat-icon {
+            font-size: 17px;
+            margin-bottom: 7px;
+        }
+
+        .stat-card h4 {
+            font-size: 19px;
+            color: var(--dark);
+        }
+
+        .stat-card p {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .preview-lower {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .mini-panel {
+            padding: 14px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 9px;
+        }
+
+        .mini-panel h4 {
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .mini-task {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 10px;
+            color: var(--text);
+        }
+
+        .mini-check {
+            width: 13px;
+            height: 13px;
+            border: 1px solid #a8c9dc;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .mini-line {
+            height: 7px;
+            border-radius: 5px;
+            background: #eaf0f5;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .mini-line span {
+            display: block;
+            height: 100%;
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        .floating-label {
+            position: absolute;
+            z-index: 3;
+            bottom: -5px;
+            left: -8px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 13px 17px;
+            box-shadow: var(--shadow);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .floating-label span {
+            color: #20a36b;
+        }
+
+        /* GENERAL SECTION */
+
+        .section {
+            padding: 85px 0;
+        }
+
+        .section-heading {
+            max-width: 650px;
+            margin: 0 auto 48px;
+            text-align: center;
+        }
+
+        .section-tag {
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .section-heading h2 {
+            font-size: clamp(28px, 4vw, 38px);
+            line-height: 1.25;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* FEATURES */
+
+        .features-section {
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            padding: 27px 24px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: white;
+            transition: 0.25s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #b8dff2;
+            box-shadow: var(--shadow);
+        }
+
+        .feature-icon {
+            width: 49px;
+            height: 49px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            background: var(--primary-light);
+            font-size: 23px;
+            margin-bottom: 19px;
+        }
+
+        .feature-card h3 {
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* ABOUT */
+
+        .about-section {
+            background: var(--background);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 65px;
+        }
+
+        .about-content h2 {
+            font-size: clamp(28px, 4vw, 38px);
+            line-height: 1.25;
+            margin-bottom: 19px;
+        }
+
+        .about-content > p {
+            color: var(--text);
+            font-size: 15px;
+            line-height: 1.9;
+            margin-bottom: 23px;
+        }
+
+        .about-points {
+            display: grid;
+            gap: 15px;
+        }
+
+        .about-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .point-check {
+            width: 25px;
+            height: 25px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e3f6ed;
+            color: #168653;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .about-point strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .about-point p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .about-visual {
+            background: white;
+            padding: 30px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .about-visual h3 {
+            font-size: 18px;
+            margin-bottom: 7px;
+        }
+
+        .about-visual > p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 23px;
+        }
+
+        .about-feature {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .about-feature:last-child {
+            border-bottom: none;
+        }
+
+        .about-feature-icon {
+            width: 39px;
+            height: 39px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-light);
+            border-radius: 9px;
+            font-size: 18px;
+        }
+
+        .about-feature strong {
+            font-size: 13px;
+            display: block;
+        }
+
+        .about-feature small {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* HOW IT WORKS */
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .step-number {
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 50%;
+            font-size: 21px;
+            font-weight: 800;
+            margin: 0 auto 20px;
+        }
+
+        .step-card h3 {
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+
+        .step-card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* CTA */
+
+        .cta-section {
+            padding: 75px 0;
+            background: linear-gradient(120deg, #087fbe, #06689c);
+        }
+
+        .cta-content {
+            text-align: center;
+            max-width: 720px;
+            margin: auto;
+        }
+
+        .cta-content h2 {
+            color: white;
+            font-size: clamp(28px, 4vw, 39px);
+            line-height: 1.25;
+            margin-bottom: 16px;
+        }
+
+        .cta-content p {
+            color: rgba(255,255,255,0.88);
+            font-size: 15px;
+            margin-bottom: 28px;
+        }
+
+        .cta-content .primary-btn {
+            background: white;
+            color: var(--primary-dark);
+            border-color: white;
+        }
+
+        .cta-content .primary-btn:hover {
+            background: #edf7fc;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            background: #13283d;
+            color: white;
+            padding: 55px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 45px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand .logo {
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand p {
+            color: #b5c5d4;
+            max-width: 340px;
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .footer-column h3 {
+            font-size: 14px;
+            margin-bottom: 17px;
+        }
+
+        .footer-column a {
+            display: block;
+            color: #b5c5d4;
+            font-size: 13px;
+            margin-bottom: 11px;
+            transition: 0.2s;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.13);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            color: #a9bbca;
+            font-size: 12px;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width: 950px) {
+            .hero-grid,
+            .about-grid {
+                gap: 35px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                gap: 17px;
+            }
+        }
+
+        @media(max-width: 750px) {
+            .nav-content {
+                min-height: 68px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 68px;
+                left: 0;
+                right: 0;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 12px 5%;
+                background: white;
+                border-bottom: 1px solid var(--border);
+                box-shadow: 0 12px 20px rgba(0,0,0,0.05);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 12px 0;
+            }
+
+            .nav-actions {
+                gap: 5px;
+            }
+
+            .nav-actions .login-btn {
+                padding: 9px;
+            }
+
+            .nav-actions .primary-btn {
+                padding: 10px 13px;
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 60px 0 70px;
+            }
+
+            .hero-grid,
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content {
+                text-align: center;
+            }
+
+            .hero-description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .preview-wrapper {
+                max-width: 550px;
+                margin: auto;
+                width: 100%;
+            }
+
+            .about-content {
+                text-align: center;
+            }
+
+            .about-points {
+                text-align: left;
+            }
+
+            .steps-grid {
+                gap: 10px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-brand {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media(max-width: 520px) {
+            .container {
+                width: 90%;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .logo-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 19px;
+            }
+
+            .nav-actions .login-btn {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 39px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+            }
+
+            .preview-wrapper {
+                padding: 5px;
+            }
+
+            .preview-body {
+                padding: 13px;
+            }
+
+            .preview-stats {
+                gap: 6px;
+            }
+
+            .stat-card {
+                padding: 10px 7px;
+            }
+
+            .stat-card h4 {
+                font-size: 16px;
+            }
+
+            .preview-lower {
+                gap: 7px;
+            }
+
+            .mini-panel {
+                padding: 10px;
+            }
+
+            .features-grid,
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                padding: 23px;
+            }
+
+            .section {
+                padding: 65px 0;
+            }
+
+            .section-heading {
+                margin-bottom: 35px;
+            }
+
+            .about-visual {
+                padding: 20px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 25px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .floating-label {
+                left: 0;
+                font-size: 10px;
+            }
+        }
+
+        @media(prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<header class="navbar">
+    <div class="container nav-content">
+
+        <a href="index.html" class="logo">
+            <span class="logo-icon">S</span>
+            StudyHub
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <a href="login.html" class="login-btn">Login</a>
+            <a href="register.html" class="primary-btn">Get Started</a>
+        </div>
+
+        <button class="menu-toggle" id="menuToggle"
+                aria-label="Toggle navigation"
+                aria-expanded="false">
+            ☰
+        </button>
+
+    </div>
+</header>
+
+
+<!-- HERO -->
+<main>
+
+<section class="hero" id="home">
+    <div class="container hero-grid">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                <span></span>
+                YOUR ACADEMIC PRODUCTIVITY PLATFORM
+            </div>
+
+            <h1>
+                Your Academic Life,
+                <span>Organized.</span>
+            </h1>
+
+            <p class="hero-description">
+                Take control of your academic journey with StudyHub.
+                Organize your learning materials, manage your timetable,
+                set study goals and track your progress — all in one place.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="register.html" class="primary-btn">
+                    Get Started Free <span>→</span>
+                </a>
+
+                <a href="#features" class="secondary-btn">
+                    Explore Features
+                </a>
+            </div>
+
+            <p class="hero-note">
+                Designed for university and college students across Tanzania.
+            </p>
+
+        </div>
+
+
+        <!-- DASHBOARD PREVIEW -->
+        <div class="preview-wrapper">
+
+            <div class="preview-card">
+
+                <div class="preview-top">
+                    <div class="preview-brand">StudyHub</div>
+                    <div class="preview-avatar">SH</div>
+                </div>
+
+                <div class="preview-body">
+
+                    <div class="preview-welcome">
+                        <h3>Your Academic Overview</h3>
+                        <p>One organized space for your study activities.</p>
+                    </div>
+
+                    <div class="preview-stats">
+
+                        <div class="stat-card">
+                            <div class="stat-icon">📚</div>
+                            <h4>Library</h4>
+                            <p>Study materials</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">📅</div>
+                            <h4>Schedule</h4>
+                            <p>Academic events</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">🎯</div>
+                            <h4>Goals</h4>
+                            <p>Study targets</p>
+                        </div>
+
+                    </div>
+
+                    <div class="preview-lower">
+
+                        <div class="mini-panel">
+                            <h4>Study Activities</h4>
+
+                            <div class="mini-task">
+                                <span class="mini-check"></span>
+                                Review lecture notes
+                            </div>
+
+                            <div class="mini-task">
+                                <span class="mini-check"></span>
+                                Prepare assignment
+                            </div>
+
+                            <div class="mini-task">
+                                <span class="mini-check"></span>
+                                Study session
+                            </div>
+                        </div>
+
+                        <div class="mini-panel">
+                            <h4>Academic Progress</h4>
+
+                            <div class="mini-line">
+                                <span style="width:75%"></span>
+                            </div>
+
+                            <div class="mini-line">
+                                <span style="width:55%"></span>
+                            </div>
+
+                            <div class="mini-line">
+                                <span style="width:85%"></span>
+                            </div>
+
+                            <small style="color:#718096;font-size:10px;">
+                                Progress overview preview
+                            </small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="floating-label">
+                ✓ <span>One platform.</span> Better organization.
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- FEATURES -->
+<section class="section features-section" id="features">
+
+    <div class="container">
+
+        <div class="section-heading">
+            <div class="section-tag">What StudyHub Offers</div>
+
+            <h2>Everything You Need to Stay Organized</h2>
+
+            <p>
+                Manage your essential academic activities through
+                one convenient and organized platform.
+            </p>
+        </div>
+
+
+        <div class="features-grid">
+
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>My Library</h3>
+                <p>
+                    Upload, organize, access and manage your learning
+                    materials. Keep important academic documents
+                    organized in one place.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Timetable Management</h3>
+                <p>
+                    Organize lecture schedules, examinations and
+                    important academic events with your personal timetable.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <h3>Study Timer</h3>
+                <p>
+                    Manage focused study sessions, record study duration
+                    and review your study activity.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Goals & Tasks</h3>
+                <p>
+                    Set academic goals, organize assignments,
+                    manage priorities and keep track of deadlines.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔔</div>
+                <h3>Reminders & Notifications</h3>
+                <p>
+                    Stay informed about important tasks, upcoming
+                    deadlines and scheduled academic activities.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Progress Board</h3>
+                <p>
+                    Review your study activity, completed tasks
+                    and progress towards your personal academic goals.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔎</div>
+                <h3>Smart Search</h3>
+                <p>
+                    Find accessible learning materials, tasks,
+                    goals and timetable information more conveniently.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3>Account Settings</h3>
+                <p>
+                    Manage your personal profile, account preferences
+                    and supported security settings.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🌙</div>
+                <h3>Dark & Light Mode</h3>
+                <p>
+                    Choose a display theme that suits your preference
+                    and enjoy a comfortable interface.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ABOUT -->
+<section class="section about-section" id="about">
+
+    <div class="container about-grid">
+
+        <div class="about-content">
+
+            <div class="section-tag">About StudyHub</div>
+
+            <h2>A Smarter Way to Manage Your Academic Life</h2>
+
+            <p>
+                StudyHub is a web-based academic management and
+                productivity platform designed for university and
+                college students across Tanzania.
+
+                It provides a centralized digital workspace where
+                students can organize learning resources, schedules,
+                study tasks and personal academic activities.
+            </p>
+
+            <div class="about-points">
+
+                <div class="about-point">
+                    <div class="point-check">✓</div>
+                    <div>
+                        <strong>One Centralized Workspace</strong>
+                        <p>Bring your important study activities together.</p>
+                    </div>
+                </div>
+
+                <div class="about-point">
+                    <div class="point-check">✓</div>
+                    <div>
+                        <strong>Designed for Students</strong>
+                        <p>Support your academic planning and organization.</p>
+                    </div>
+                </div>
+
+                <div class="about-point">
+                    <div class="point-check">✓</div>
+                    <div>
+                        <strong>Accessible Across Devices</strong>
+                        <p>Use a responsive interface on supported screens.</p>
+                    </div>
+                </div>
+
+                <div class="about-point">
+                    <div class="point-check">✓</div>
+                    <div>
+                        <strong>Personal Academic Management</strong>
+                        <p>Manage your own learning activities and progress.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="about-visual">
+
+            <h3>Your StudyHub Workspace</h3>
+
+            <p>
+                A connected set of tools for your academic activities.
+            </p>
+
+            <div class="about-feature">
+                <div class="about-feature-icon">📚</div>
+                <div>
+                    <strong>Learning Resources</strong>
+                    <small>Organize your academic documents.</small>
+                </div>
+            </div>
+
+            <div class="about-feature">
+                <div class="about-feature-icon">🗓️</div>
+                <div>
+                    <strong>Academic Planning</strong>
+                    <small>Manage your timetable and activities.</small>
+                </div>
+            </div>
+
+            <div class="about-feature">
+                <div class="about-feature-icon">🎯</div>
+                <div>
+                    <strong>Goals and Productivity</strong>
+                    <small>Keep track of your academic targets.</small>
+                </div>
+            </div>
+
+            <div class="about-feature">
+                <div class="about-feature-icon">📈</div>
+                <div>
+                    <strong>Progress Tracking</strong>
+                    <small>Review your study activity.</small>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how-it-works">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div class="section-tag">Getting Started</div>
+
+            <h2>Start Organizing Your Academic Journey</h2>
+
+            <p>
+                Getting started with StudyHub is simple.
+                Create your account and begin managing your academic activities.
+            </p>
+
+        </div>
+
+
+        <div class="steps-grid">
+
+            <div class="step-card">
+                <div class="step-number">01</div>
+                <h3>Create Your Account</h3>
+                <p>
+                    Register using your personal and academic information
+                    to create your StudyHub account.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">02</div>
+                <h3>Organize Your Studies</h3>
+                <p>
+                    Access your academic workspace and manage your
+                    documents, timetable, tasks and study goals.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">03</div>
+                <h3>Monitor Your Progress</h3>
+                <p>
+                    Record your study activity, review completed tasks
+                    and keep track of your academic goals.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- CALL TO ACTION -->
+<section class="cta-section">
+
+    <div class="container">
+
+        <div class="cta-content">
+
+            <h2>Take Control of Your Academic Journey</h2>
+
+            <p>
+                Get your academic activities organized.
+                Start using StudyHub as your personal academic workspace.
+            </p>
+
+            <a href="register.html" class="primary-btn">
+                Create Your Free Account →
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+
+    <div class="container">
+
+        <div class="footer-grid">
+
+            <div class="footer-brand">
+
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">S</span>
+                    StudyHub
+                </a>
+
+                <p>
+                    Your academic life, organized.
+                    A student-focused platform designed to help
+                    university and college students in Tanzania
+                    manage their academic activities.
+                </p>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>Quick Links</h3>
+
+                <a href="#home">Home</a>
+                <a href="#features">Features</a>
+                <a href="#about">About StudyHub</a>
+                <a href="#how-it-works">How It Works</a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>Account</h3>
+
+                <a href="login.html">Login</a>
+                <a href="register.html">Create Account</a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © <span id="currentYear"></span> StudyHub.
+                All rights reserved.
+            </p>
+
+            <p>
+                Your Academic Life, Organized.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+    // MOBILE NAVIGATION
+
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle.addEventListener('click', () => {
+
+        const isOpen = navLinks.classList.toggle('active');
+
+        menuToggle.setAttribute('aria-expanded', isOpen);
+
+        menuToggle.textContent = isOpen ? '✕' : '☰';
+
+    });
+
+
+    // CLOSE MOBILE MENU AFTER CLICKING A LINK
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+
+        link.addEventListener('click', () => {
+
+            navLinks.classList.remove('active');
+
+            menuToggle.textContent = '☰';
+
+            menuToggle.setAttribute('aria-expanded', 'false');
+
+        });
+
+    });
+
+
+    // AUTOMATIC FOOTER YEAR
+
+    document.getElementById('currentYear').textContent =
+        new Date().getFullYear();
+
+</script>
+
+</body>
+</html>

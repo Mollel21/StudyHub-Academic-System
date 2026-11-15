@@ -1,0 +1,1399 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Timer | StudyHub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #263445;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: #102b46;
+            color: white;
+            padding: 25px 18px;
+            position: fixed;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        .logo span {
+            color: #36b5e8;
+        }
+
+        .nav-link {
+            display: block;
+            color: #d8e5f1;
+            text-decoration: none;
+            padding: 14px;
+            margin-bottom: 9px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #087fbe;
+            color: white;
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            margin-left: 250px;
+            padding: 35px;
+            width: calc(100% - 250px);
+        }
+
+        .topbar {
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 28px;
+        }
+
+        .topbar p {
+            color: #718096;
+            margin-top: 8px;
+        }
+
+        /* TIMER CARD */
+        .timer-card {
+            max-width: 750px;
+            margin: 25px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+
+        .timer-card h2 {
+            margin-bottom: 10px;
+            font-size: 23px;
+        }
+
+        .description {
+            color: #718096;
+            margin-bottom: 25px;
+        }
+
+        /* TIMER MODES */
+        .mode-switch {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .mode-btn {
+            padding: 12px 25px;
+            border: 1px solid #087fbe;
+            background: white;
+            color: #087fbe;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .mode-btn.active {
+            background: #087fbe;
+            color: white;
+        }
+
+        /* TIMER CIRCLE */
+        .timer-circle {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            margin: 25px auto 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #edf7fc;
+            border: 10px solid #087fbe;
+            box-shadow: 0 0 0 10px #e4f2fa;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #102b46;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-status {
+            margin-top: 12px;
+            color: #087fbe;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        /* TIME INPUTS */
+        .custom-time {
+            margin-bottom: 25px;
+        }
+
+        .custom-time label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .time-inputs {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .time-inputs div {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .time-inputs input {
+            width: 85px;
+            padding: 13px 5px;
+            border: 1px solid #ccd6e0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .time-inputs small {
+            color: #718096;
+        }
+
+        .time-inputs span {
+            font-size: 25px;
+            font-weight: bold;
+            padding-bottom: 20px;
+        }
+
+        /* PRESETS */
+        .presets {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .preset-btn {
+            padding: 10px 18px;
+            border: 1px solid #087fbe;
+            color: #087fbe;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .preset-btn:hover {
+            background: #087fbe;
+            color: white;
+        }
+
+        /* CONTROL BUTTONS */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 13px 27px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .start-btn {
+            background: #087fbe;
+            color: white;
+        }
+
+        .pause-btn {
+            background: #f0a52b;
+            color: white;
+        }
+
+        .reset-btn {
+            background: #e7edf3;
+            color: #263445;
+        }
+
+        .control-btn:hover {
+            opacity: 0.85;
+            transform: translateY(-2px);
+        }
+
+        .message {
+            margin-top: 22px;
+            font-weight: bold;
+            min-height: 20px;
+        }
+
+        /* SESSION INFORMATION */
+        .session-info {
+            max-width: 750px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.04);
+        }
+
+        .info-card p {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 9px;
+        }
+
+        .info-card h3 {
+            color: #102b46;
+            font-size: 23px;
+        }
+
+        /* STUDY SESSION HISTORY */
+        .history-section {
+            max-width: 1100px;
+            margin: 35px auto;
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .history-header h2 {
+            color: #102b46;
+            font-size: 22px;
+        }
+
+        .history-header p {
+            color: #718096;
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .refresh-btn {
+            padding: 10px 16px;
+            border: 1px solid #087fbe;
+            border-radius: 8px;
+            background: white;
+            color: #087fbe;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .refresh-btn:hover {
+            background: #087fbe;
+            color: white;
+        }
+
+        .history-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e8edf2;
+            font-size: 14px;
+        }
+
+        .history-table th {
+            background: #f4f8fb;
+            color: #102b46;
+            font-weight: bold;
+        }
+
+        .history-table td {
+            color: #4a5568;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .status-completed {
+            background: #e4f8ec;
+            color: #168044;
+        }
+
+        .status-cancelled {
+            background: #fff1e5;
+            color: #b45b13;
+        }
+
+        .history-message {
+            text-align: center;
+            color: #718096;
+            padding: 25px 10px;
+            font-size: 14px;
+        }
+
+        .history-count {
+            color: #718096;
+            font-size: 13px;
+            margin-top: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+                width: calc(100% - 210px);
+                padding: 20px;
+            }
+
+            .timer-card {
+                padding: 25px 15px;
+            }
+
+            .timer-circle {
+                width: 230px;
+                height: 230px;
+            }
+
+            .timer-display {
+                font-size: 39px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .logo {
+                margin-bottom: 18px;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px 14px;
+            }
+
+            .session-info {
+                grid-template-columns: 1fr;
+            }
+
+            .time-inputs {
+                gap: 6px;
+            }
+
+            .time-inputs input {
+                width: 72px;
+                font-size: 17px;
+            }
+
+            .timer-display {
+                font-size: 35px;
+            }
+
+            .history-section {
+                padding: 18px 12px;
+            }
+
+            .history-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">Study<span>Hub</span></div>
+
+        <nav>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="library.html" class="nav-link">My Library</a>
+            <a href="timetable.html" class="nav-link">Timetable</a>
+            <a href="timer.html" class="nav-link active">Study Timer</a>
+        </nav>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="topbar">
+            <h1>Study Timer</h1>
+            <p>Manage your study time and improve your productivity.</p>
+        </header>
+
+        <section class="timer-card">
+
+            <h2>Focus Session</h2>
+
+            <p class="description">
+                Choose your timer mode and start your study session.
+            </p>
+
+            <!-- MODE SWITCH -->
+            <div class="mode-switch">
+
+                <button class="mode-btn active" id="countdownMode">
+                    Countdown
+                </button>
+
+                <button class="mode-btn" id="stopwatchMode">
+                    Stopwatch
+                </button>
+
+            </div>
+
+            <!-- TIMER DISPLAY -->
+            <div class="timer-circle">
+
+                <div class="timer-display" id="timerDisplay">
+                    00:25:00
+                </div>
+
+                <div class="timer-status" id="timerStatus">
+                    READY TO STUDY
+                </div>
+
+            </div>
+
+            <!-- COUNTDOWN SETTINGS -->
+            <div id="countdownSettings">
+
+                <div class="custom-time">
+
+                    <label>Set Study Duration</label>
+
+                    <div class="time-inputs">
+
+                        <div>
+                            <input type="number" id="customHours"
+                                   min="0" max="99" value="0">
+                            <small>Hours</small>
+                        </div>
+
+                        <span>:</span>
+
+                        <div>
+                            <input type="number" id="customMinutes"
+                                   min="0" max="59" value="25">
+                            <small>Minutes</small>
+                        </div>
+
+                        <span>:</span>
+
+                        <div>
+                            <input type="number" id="customSeconds"
+                                   min="0" max="59" value="0">
+                            <small>Seconds</small>
+                        </div>
+
+                    </div>
+
+                    <button class="preset-btn" id="setCustomBtn">
+                        Set Time
+                    </button>
+
+                </div>
+
+                <div class="presets">
+
+                    <button class="preset-btn" data-minutes="25">
+                        25 Min
+                    </button>
+
+                    <button class="preset-btn" data-minutes="45">
+                        45 Min
+                    </button>
+
+                    <button class="preset-btn" data-minutes="60">
+                        60 Min
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- STOPWATCH INFORMATION -->
+            <div id="stopwatchInfo" class="hidden">
+
+                <p class="description">
+                    Stopwatch counts the time you spend studying.
+                </p>
+
+            </div>
+
+            <!-- CONTROLS -->
+            <div class="controls">
+
+                <button class="control-btn start-btn" id="startBtn">
+                    Start
+                </button>
+
+                <button class="control-btn pause-btn" id="pauseBtn">
+                    Pause
+                </button>
+
+                <button class="control-btn reset-btn" id="resetBtn">
+                    Reset
+                </button>
+
+                <button class="control-btn start-btn" id="finishBtn">
+                    Finish Session
+                </button>
+
+            </div>
+
+            <div class="message" id="timerMessage"></div>
+
+        </section>
+
+        <!-- INFORMATION CARDS -->
+        <section class="session-info">
+
+            <div class="info-card">
+                <p>Selected Study Duration</p>
+                <h3 id="selectedDuration">00:25:00</h3>
+            </div>
+
+            <div class="info-card">
+                <p>Time Studied</p>
+                <h3 id="timeStudied">00:00:00</h3>
+            </div>
+
+        </section>
+
+        <!-- STUDY SESSION HISTORY -->
+        <section class="history-section">
+
+            <div class="history-header">
+                <div>
+                    <h2>Study Session History</h2>
+                    <p>Review your previously recorded study sessions.</p>
+                </div>
+
+                <button class="refresh-btn" id="refreshHistoryBtn" type="button">
+                    Refresh
+                </button>
+            </div>
+
+            <div class="history-table-wrapper">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Timer Mode</th>
+                            <th>Planned Duration</th>
+                            <th>Time Studied</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="historyTableBody">
+                        <tr>
+                            <td colspan="5" class="history-message">
+                                Loading study sessions...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="history-count" id="historyCount">
+                Total sessions: 0
+            </p>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+    // BACKEND API
+    const API_URL = "http://localhost:5000/api";
+
+    // TIMER VARIABLES
+    let timerMode = "countdown";
+    let totalSeconds = 1500;
+    let remainingSeconds = 1500;
+    let elapsedSeconds = 0;
+
+    let timerInterval = null;
+    let isRunning = false;
+
+    // STUDY SESSION VARIABLES
+    let sessionStartedAt = null;
+    let sessionSaved = false;
+    let isSaving = false;
+
+    // HTML ELEMENTS
+    const timerDisplay = document.getElementById("timerDisplay");
+    const timerStatus = document.getElementById("timerStatus");
+    const selectedDuration = document.getElementById("selectedDuration");
+    const timeStudied = document.getElementById("timeStudied");
+    const timerMessage = document.getElementById("timerMessage");
+
+    const countdownMode = document.getElementById("countdownMode");
+    const stopwatchMode = document.getElementById("stopwatchMode");
+
+    const countdownSettings = document.getElementById("countdownSettings");
+    const stopwatchInfo = document.getElementById("stopwatchInfo");
+
+    const startBtn = document.getElementById("startBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const finishBtn = document.getElementById("finishBtn");
+
+    const historyTableBody = document.getElementById("historyTableBody");
+    const historyCount = document.getElementById("historyCount");
+    const refreshHistoryBtn = document.getElementById("refreshHistoryBtn");
+
+
+    // FORMAT TIME AS HH:MM:SS
+    function formatTime(seconds) {
+
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        return (
+            String(hours).padStart(2, "0") + ":" +
+            String(minutes).padStart(2, "0") + ":" +
+            String(secs).padStart(2, "0")
+        );
+    }
+
+
+    // GET ACTUAL STUDY TIME
+    function getActualSeconds() {
+
+        if (timerMode === "countdown") {
+            return totalSeconds - remainingSeconds;
+        }
+
+        return elapsedSeconds;
+    }
+
+
+    // UPDATE TIMER DISPLAY
+    function updateDisplay() {
+
+        if (timerMode === "countdown") {
+
+            timerDisplay.textContent = formatTime(remainingSeconds);
+
+            const studied = totalSeconds - remainingSeconds;
+
+            timeStudied.textContent = formatTime(studied);
+
+        } else {
+
+            timerDisplay.textContent = formatTime(elapsedSeconds);
+
+            timeStudied.textContent = formatTime(elapsedSeconds);
+
+        }
+    }
+
+
+    // SET CUSTOM COUNTDOWN TIME
+    function setCustomTime() {
+
+        if (isRunning || sessionStartedAt || isSaving) {
+            alert("Finish or reset your current session before changing duration.");
+            return;
+        }
+
+        const hours = Number(document.getElementById("customHours").value);
+        const minutes = Number(document.getElementById("customMinutes").value);
+        const seconds = Number(document.getElementById("customSeconds").value);
+
+        if (
+            !Number.isInteger(hours) ||
+            !Number.isInteger(minutes) ||
+            !Number.isInteger(seconds) ||
+            hours < 0 || hours > 99 ||
+            minutes < 0 || minutes > 59 ||
+            seconds < 0 || seconds > 59
+        ) {
+            alert("Please enter valid hours, minutes and seconds.");
+            return;
+        }
+
+        const selectedTime = hours * 3600 + minutes * 60 + seconds;
+
+        if (selectedTime <= 0) {
+            alert("Study duration must be greater than zero.");
+            return;
+        }
+
+        totalSeconds = selectedTime;
+        remainingSeconds = selectedTime;
+
+        selectedDuration.textContent = formatTime(totalSeconds);
+
+        timerStatus.textContent = "READY TO STUDY";
+        timerMessage.textContent = "Study duration successfully set.";
+
+        updateDisplay();
+    }
+
+
+    // SET PRESET TIME
+    function setPresetTime(minutes) {
+
+        if (isRunning || sessionStartedAt || isSaving) {
+            alert("Finish or reset your current session before changing duration.");
+            return;
+        }
+
+        document.getElementById("customHours").value = 0;
+        document.getElementById("customMinutes").value = minutes;
+        document.getElementById("customSeconds").value = 0;
+
+        totalSeconds = minutes * 60;
+        remainingSeconds = totalSeconds;
+
+        selectedDuration.textContent = formatTime(totalSeconds);
+
+        timerStatus.textContent = "READY TO STUDY";
+        timerMessage.textContent = "Preset duration selected.";
+
+        updateDisplay();
+    }
+
+
+    // SWITCH TIMER MODE
+    function switchMode(mode) {
+
+        if (isRunning || sessionStartedAt || isSaving) {
+            alert("Please finish or reset your current session before changing modes.");
+            return;
+        }
+
+        timerMode = mode;
+
+        elapsedSeconds = 0;
+        totalSeconds = 1500;
+        remainingSeconds = 1500;
+
+        timerMessage.textContent = "";
+        timerStatus.textContent = "READY TO STUDY";
+
+        if (mode === "countdown") {
+
+            countdownMode.classList.add("active");
+            stopwatchMode.classList.remove("active");
+
+            countdownSettings.classList.remove("hidden");
+            stopwatchInfo.classList.add("hidden");
+
+            selectedDuration.textContent = formatTime(totalSeconds);
+
+        } else {
+
+            stopwatchMode.classList.add("active");
+            countdownMode.classList.remove("active");
+
+            countdownSettings.classList.add("hidden");
+            stopwatchInfo.classList.remove("hidden");
+
+            selectedDuration.textContent = "Unlimited";
+
+        }
+
+        updateDisplay();
+    }
+
+
+    // START TIMER
+    function startTimer() {
+
+        if (isRunning || isSaving) return;
+
+        if (sessionSaved) {
+            timerMessage.textContent =
+                "Please reset the timer to start a new session.";
+            return;
+        }
+
+        if (timerMode === "countdown" && remainingSeconds <= 0) {
+            timerMessage.textContent =
+                "Please set or reset your study duration.";
+            return;
+        }
+
+        // Record the original start time once.
+        if (!sessionStartedAt) {
+            sessionStartedAt = new Date().toISOString();
+        }
+
+        isRunning = true;
+
+        timerStatus.textContent = "FOCUSING...";
+        timerMessage.textContent = "Great! Keep focusing.";
+
+        timerInterval = setInterval(() => {
+
+            if (timerMode === "countdown") {
+
+                if (remainingSeconds > 0) {
+                    remainingSeconds--;
+                }
+
+                if (remainingSeconds <= 0) {
+                    completeTimer();
+                    return;
+                }
+
+            } else {
+
+                elapsedSeconds++;
+
+            }
+
+            updateDisplay();
+
+        }, 1000);
+    }
+
+
+    // PAUSE TIMER
+    function pauseTimer() {
+
+        if (!isRunning) return;
+
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+        isRunning = false;
+
+        timerStatus.textContent = "PAUSED";
+        timerMessage.textContent = "Your study session is paused.";
+    }
+
+
+    // SAVE SESSION TO BACKEND
+    async function saveStudySession(status) {
+
+        if (!sessionStartedAt || sessionSaved || isSaving) {
+            return false;
+        }
+
+        const token = sessionStorage.getItem("studyhubToken");
+
+        if (!token) {
+
+            timerMessage.textContent =
+                "Please log in again. Your session could not be saved.";
+
+            return false;
+        }
+
+        const actual = getActualSeconds();
+
+        if (actual <= 0) {
+
+            timerMessage.textContent = "No study time recorded.";
+
+            return false;
+        }
+
+        const sessionData = {
+            timer_mode: timerMode,
+            planned_seconds: timerMode === "countdown" ? totalSeconds : 0,
+            actual_seconds: actual,
+            status: status,
+            started_at: sessionStartedAt,
+            completed_at: new Date().toISOString()
+        };
+
+        isSaving = true;
+        finishBtn.disabled = true;
+        resetBtn.disabled = true;
+
+        timerMessage.textContent = "Saving your study session...";
+
+        try {
+
+            const response = await fetch(`${API_URL}/study-sessions`, {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+
+                body: JSON.stringify(sessionData)
+
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to save session.");
+            }
+
+            sessionSaved = true;
+
+            timerMessage.textContent =
+                "Study session saved successfully!";
+
+            console.log("Saved Study Session:", data.session);
+
+            // Refresh history after saving a new session.
+            await loadStudyHistory();
+
+            return true;
+
+        } catch (error) {
+
+            console.error("Save Study Session Error:", error);
+
+            timerMessage.textContent =
+                "Could not save session: " + error.message;
+
+            return false;
+
+        } finally {
+
+            isSaving = false;
+            finishBtn.disabled = false;
+            resetBtn.disabled = false;
+
+        }
+    }
+
+
+    // FORMAT DATE AND TIME FOR SESSION HISTORY
+    function formatSessionDate(dateValue) {
+
+        if (!dateValue) return "Not available";
+
+        const date = new Date(dateValue);
+
+        if (Number.isNaN(date.getTime())) {
+            return "Not available";
+        }
+
+        return date.toLocaleString();
+    }
+
+
+    // DISPLAY STUDY SESSION HISTORY
+    async function loadStudyHistory() {
+
+        const token = sessionStorage.getItem("studyhubToken");
+
+        if (!token) {
+
+            historyTableBody.innerHTML = "";
+
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+
+            cell.colSpan = 5;
+            cell.className = "history-message";
+            cell.textContent =
+                "Please log in to view your study session history.";
+
+            row.appendChild(cell);
+            historyTableBody.appendChild(row);
+
+            historyCount.textContent = "Total sessions: 0";
+
+            return;
+        }
+
+        historyTableBody.innerHTML = "";
+
+        const loadingRow = document.createElement("tr");
+        const loadingCell = document.createElement("td");
+
+        loadingCell.colSpan = 5;
+        loadingCell.className = "history-message";
+        loadingCell.textContent = "Loading study sessions...";
+
+        loadingRow.appendChild(loadingCell);
+        historyTableBody.appendChild(loadingRow);
+
+        try {
+
+            const response = await fetch(`${API_URL}/study-sessions`, {
+
+                method: "GET",
+
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Could not load study sessions.");
+            }
+
+            const sessions = Array.isArray(data.sessions)
+                ? data.sessions
+                : [];
+
+            historyTableBody.innerHTML = "";
+
+            if (sessions.length === 0) {
+
+                const row = document.createElement("tr");
+                const cell = document.createElement("td");
+
+                cell.colSpan = 5;
+                cell.className = "history-message";
+
+                cell.textContent =
+                    "No study sessions recorded yet. Start studying to build your history.";
+
+                row.appendChild(cell);
+                historyTableBody.appendChild(row);
+
+            } else {
+
+                sessions.forEach(session => {
+
+                    const row = document.createElement("tr");
+
+                    // Date
+                    const dateCell = document.createElement("td");
+                    dateCell.textContent =
+                        formatSessionDate(session.started_at);
+
+                    // Timer Mode
+                    const modeCell = document.createElement("td");
+
+                    modeCell.textContent =
+                        session.timer_mode === "countdown"
+                            ? "Countdown"
+                            : "Stopwatch";
+
+                    // Planned Duration
+                    const plannedCell = document.createElement("td");
+
+                    plannedCell.textContent =
+                        session.timer_mode === "countdown"
+                            ? formatTime(Number(session.planned_seconds) || 0)
+                            : "Unlimited";
+
+                    // Actual Study Duration
+                    const actualCell = document.createElement("td");
+
+                    actualCell.textContent =
+                        formatTime(Number(session.actual_seconds) || 0);
+
+                    // Status
+                    const statusCell = document.createElement("td");
+                    const statusBadge = document.createElement("span");
+
+                    const status =
+                        String(session.status || "unknown").toLowerCase();
+
+                    statusBadge.className =
+                        "status-badge " +
+                        (status === "completed"
+                            ? "status-completed"
+                            : status === "cancelled"
+                                ? "status-cancelled"
+                                : "");
+
+                    statusBadge.textContent = status;
+
+                    statusCell.appendChild(statusBadge);
+
+                    row.appendChild(dateCell);
+                    row.appendChild(modeCell);
+                    row.appendChild(plannedCell);
+                    row.appendChild(actualCell);
+                    row.appendChild(statusCell);
+
+                    historyTableBody.appendChild(row);
+
+                });
+
+            }
+
+            historyCount.textContent =
+                `Total sessions: ${sessions.length}`;
+
+        } catch (error) {
+
+            console.error("Load Study History Error:", error);
+
+            historyTableBody.innerHTML = "";
+
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+
+            cell.colSpan = 5;
+            cell.className = "history-message";
+
+            cell.textContent =
+                "Unable to load study history. " + error.message;
+
+            row.appendChild(cell);
+            historyTableBody.appendChild(row);
+
+            historyCount.textContent = "Total sessions: 0";
+
+        }
+    }
+
+
+    // RESET TIMER
+    async function resetTimer() {
+
+        if (isSaving) return;
+
+        if (sessionStartedAt && !sessionSaved && getActualSeconds() > 0) {
+
+            const confirmReset = confirm(
+                "Reset this session? Your recorded study time will be saved as cancelled."
+            );
+
+            if (!confirmReset) return;
+
+            clearInterval(timerInterval);
+            timerInterval = null;
+
+            isRunning = false;
+
+            const saved = await saveStudySession("cancelled");
+
+            if (!saved) {
+
+                const retry = confirm(
+                    "Session could not be saved. Reset anyway and lose this session?"
+                );
+
+                if (!retry) {
+                    return;
+                }
+            }
+        }
+
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+        isRunning = false;
+
+        elapsedSeconds = 0;
+        remainingSeconds = totalSeconds;
+
+        sessionStartedAt = null;
+        sessionSaved = false;
+
+        timerStatus.textContent = "READY TO STUDY";
+        timerMessage.textContent = "Timer has been reset.";
+
+        updateDisplay();
+    }
+
+
+    // FINISH SESSION MANUALLY
+    async function finishSession() {
+
+        if (isSaving) return;
+
+        if (!sessionStartedAt) {
+
+            timerMessage.textContent =
+                "Start a study session before finishing.";
+
+            return;
+        }
+
+        if (sessionSaved) {
+
+            timerMessage.textContent =
+                "This study session has already been saved.";
+
+            return;
+        }
+
+        if (getActualSeconds() <= 0) {
+
+            timerMessage.textContent = "No study time recorded.";
+
+            return;
+        }
+
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+        isRunning = false;
+
+        let finalStatus = "completed";
+
+        // Early countdown finish is recorded as cancelled.
+        if (timerMode === "countdown" && remainingSeconds > 0) {
+            finalStatus = "cancelled";
+        }
+
+        timerStatus.textContent =
+            finalStatus === "completed"
+                ? "COMPLETED!"
+                : "SESSION ENDED";
+
+        await saveStudySession(finalStatus);
+    }
+
+
+    // COMPLETE COUNTDOWN AUTOMATICALLY
+    async function completeTimer() {
+
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+        isRunning = false;
+        remainingSeconds = 0;
+
+        timerStatus.textContent = "COMPLETED!";
+
+        timerMessage.textContent =
+            "Congratulations! Saving your study session...";
+
+        updateDisplay();
+
+        await saveStudySession("completed");
+
+        alert("Congratulations! Your study session is complete.");
+    }
+
+
+    // EVENT LISTENERS
+    startBtn.addEventListener("click", startTimer);
+
+    pauseBtn.addEventListener("click", pauseTimer);
+
+    resetBtn.addEventListener("click", resetTimer);
+
+    finishBtn.addEventListener("click", finishSession);
+
+    refreshHistoryBtn.addEventListener("click", loadStudyHistory);
+
+    document.getElementById("setCustomBtn")
+        .addEventListener("click", setCustomTime);
+
+    countdownMode.addEventListener("click", () => {
+        switchMode("countdown");
+    });
+
+    stopwatchMode.addEventListener("click", () => {
+        switchMode("stopwatch");
+    });
+
+    document.querySelectorAll("[data-minutes]").forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const minutes = Number(button.dataset.minutes);
+
+            setPresetTime(minutes);
+
+        });
+
+    });
+
+
+    // INITIAL DISPLAY
+    updateDisplay();
+
+    // Load saved study sessions when the page opens.
+    loadStudyHistory();
+
+</script>
+
+</body>
+</html>

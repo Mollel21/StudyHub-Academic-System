@@ -1,0 +1,1398 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Timetable | StudyHub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #24344d;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 245px;
+            background: #142d4e;
+            color: white;
+            padding: 25px 16px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 23px;
+            font-weight: bold;
+            margin: 0 10px 40px;
+        }
+
+        .nav a {
+            display: block;
+            color: #dce7f5;
+            text-decoration: none;
+            padding: 13px 15px;
+            margin-bottom: 8px;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #24517e;
+            color: white;
+        }
+
+        /* MAIN CONTENT */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            background: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e8edf3;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar h2 {
+            font-size: 21px;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: #eaf2f8;
+            color: #142d4e;
+            font-size: 23px;
+            padding: 7px 11px;
+        }
+
+        .sidebar-overlay {
+            display: none;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .intro {
+            margin-bottom: 25px;
+        }
+
+        .intro h1 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .intro p {
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        /* CARDS */
+
+        .form-card,
+        .timetable-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        }
+
+        .section-title {
+            font-size: 19px;
+            margin-bottom: 20px;
+        }
+
+        /* FORM */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dce3ec;
+            border-radius: 7px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+            color: #24344d;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #087fbe;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* BUTTONS */
+
+        button {
+            border: none;
+            border-radius: 7px;
+            padding: 11px 17px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .primary-btn {
+            background: #087fbe;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #06699e;
+        }
+
+        .secondary-btn {
+            background: #eaf2f8;
+            color: #24517e;
+        }
+
+        .danger-btn {
+            background: #fff0f0;
+            color: #d33;
+        }
+
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* MESSAGES */
+
+        .message {
+            margin: 15px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .success-message {
+            color: #16834a;
+        }
+
+        .error-message {
+            color: #d33;
+        }
+
+        /* WEEKLY SCHEDULE */
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .section-heading p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .toolbar input {
+            flex: 1;
+        }
+
+        .toolbar select {
+            max-width: 190px;
+        }
+
+        .day-section {
+            margin-bottom: 25px;
+        }
+
+        .day-title {
+            background: #eaf2f8;
+            color: #24517e;
+            padding: 12px 15px;
+            border-radius: 7px;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .event-card {
+            border: 1px solid #e8edf3;
+            border-left: 4px solid #087fbe;
+            border-radius: 9px;
+            padding: 17px;
+            margin-bottom: 12px;
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .event-header h3 {
+            font-size: 16px;
+            margin-bottom: 7px;
+            overflow-wrap: anywhere;
+        }
+
+        .course-code {
+            display: inline-block;
+            background: #eaf2f8;
+            color: #24517e;
+            padding: 5px 9px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .event-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 9px;
+            margin-top: 8px;
+        }
+
+        .event-details p {
+            color: #718096;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .event-notes {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid #e8edf3;
+            color: #718096;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .event-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .event-actions button {
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .empty {
+            text-align: center;
+            color: #718096;
+            padding: 35px 10px;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width: 750px) {
+            .content {
+                padding: 20px;
+            }
+        }
+
+        @media(max-width: 600px) {
+
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 260px;
+                height: 100vh;
+                z-index: 1001;
+                overflow-y: auto;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                padding: 25px 16px;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .brand {
+                margin: 5px 8px 30px;
+            }
+
+            .nav a {
+                display: block;
+                white-space: normal;
+                margin-bottom: 8px;
+                padding: 13px 15px;
+            }
+
+            .menu-toggle {
+                display: inline-block;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.45);
+                z-index: 1000;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .topbar {
+                padding: 16px 20px;
+            }
+
+            .topbar h2 {
+                font-size: 19px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .toolbar {
+                flex-direction: column;
+            }
+
+            .toolbar select {
+                max-width: none;
+            }
+
+            .form-card,
+            .timetable-card {
+                padding: 18px;
+            }
+
+            .event-details {
+                grid-template-columns: 1fr;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+            }
+
+            .event-header {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">StudyHub</div>
+
+        <nav class="nav">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="library.html">My Library</a>
+            <a href="timetable.html" class="active">Timetable</a>
+            <a href="goals.html">Study Goals</a>
+            <a href="reminder.html">Reminders</a>
+            <a href="progress.html">Progress Board</a>
+            <a href="#" id="logoutLink">Logout</a>
+        </nav>
+
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    type="button"
+                    class="menu-toggle"
+                    id="menuToggle"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false">
+                    ☰
+                </button>
+
+                <h2>My Timetable</h2>
+
+            </div>
+
+            <span id="studentName">Student</span>
+
+        </header>
+
+        <div class="content">
+
+            <!-- INTRO -->
+
+            <section class="intro">
+
+                <h1>My Class Timetable</h1>
+
+                <p>
+                    Organize your weekly lectures, practical sessions
+                    and academic activities in one place.
+                </p>
+
+            </section>
+
+            <!-- ADD CLASS FORM -->
+
+            <section class="form-card">
+
+                <h2 class="section-title" id="formTitle">
+                    Add New Class
+                </h2>
+
+                <form id="timetableForm">
+
+                    <input type="hidden" id="eventId">
+
+                    <div class="form-grid">
+
+                        <div class="field">
+                            <label for="subjectName">Subject Name</label>
+
+                            <input
+                                type="text"
+                                id="subjectName"
+                                placeholder="e.g. Database Management Systems"
+                                maxlength="150"
+                                required>
+                        </div>
+
+                        <div class="field">
+                            <label for="courseCode">Course Code</label>
+
+                            <input
+                                type="text"
+                                id="courseCode"
+                                placeholder="e.g. IT 8209"
+                                maxlength="50">
+                        </div>
+
+                        <div class="field">
+                            <label for="dayOfWeek">Day of Week</label>
+
+                            <select id="dayOfWeek" required>
+                                <option value="">Select day</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="venue">Venue</label>
+
+                            <input
+                                type="text"
+                                id="venue"
+                                placeholder="e.g. Computer Lab 1"
+                                maxlength="150">
+                        </div>
+
+                        <div class="field">
+                            <label for="startTime">Start Time</label>
+
+                            <input
+                                type="time"
+                                id="startTime"
+                                required>
+                        </div>
+
+                        <div class="field">
+                            <label for="endTime">End Time</label>
+
+                            <input
+                                type="time"
+                                id="endTime"
+                                required>
+                        </div>
+
+                        <div class="field">
+                            <label for="lecturerName">Lecturer Name</label>
+
+                            <input
+                                type="text"
+                                id="lecturerName"
+                                placeholder="Enter lecturer name"
+                                maxlength="150">
+                        </div>
+
+                        <div class="field full">
+                            <label for="notes">Additional Notes</label>
+
+                            <textarea
+                                id="notes"
+                                placeholder="Enter additional information..."></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="primary-btn"
+                            id="saveBtn">
+                            Add to Timetable
+                        </button>
+
+                        <button
+                            type="button"
+                            class="secondary-btn hidden"
+                            id="cancelEditBtn">
+                            Cancel Edit
+                        </button>
+
+                    </div>
+
+                    <p id="formMessage" class="message"></p>
+
+                </form>
+
+            </section>
+
+            <!-- WEEKLY SCHEDULE -->
+
+            <section class="timetable-card">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h2 class="section-title">Weekly Schedule</h2>
+
+                        <p>View and manage your weekly classes.</p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        id="refreshBtn">
+                        Refresh
+                    </button>
+
+                </div>
+
+                <div class="toolbar">
+
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Search subjects or course codes...">
+
+                    <select id="dayFilter">
+                        <option value="">All Days</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+
+                </div>
+
+                <p id="scheduleMessage" class="message"></p>
+
+                <div id="timetableContainer">
+
+                    <div class="empty">
+                        Loading your timetable...
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+
+    // API CONFIGURATION
+
+    const API_URL = 'http://localhost:5000/api';
+
+    const token = sessionStorage.getItem('studyhubToken');
+
+    const days = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+    ];
+
+    let allEvents = [];
+
+    // DOM ELEMENTS
+
+    const timetableForm = document.getElementById('timetableForm');
+
+    const timetableContainer =
+        document.getElementById('timetableContainer');
+
+    const formMessage = document.getElementById('formMessage');
+
+    const scheduleMessage =
+        document.getElementById('scheduleMessage');
+
+    const saveBtn = document.getElementById('saveBtn');
+
+    const eventIdInput = document.getElementById('eventId');
+
+    // MOBILE SIDEBAR
+
+    const sidebar = document.getElementById('sidebar');
+
+    const menuToggle = document.getElementById('menuToggle');
+
+    const sidebarOverlay =
+        document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('show');
+
+        menuToggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('show');
+
+        menuToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    menuToggle.addEventListener('click', function() {
+
+        if (sidebar.classList.contains('open')) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+
+    });
+
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    document.querySelectorAll('.nav a').forEach(link => {
+        link.addEventListener('click', closeSidebar);
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeSidebar();
+        }
+    });
+
+    // AUTHENTICATION CHECK
+
+    if (!token) {
+        window.location.href = 'login.html';
+    }
+
+    function authHeaders() {
+        return {
+            'Authorization': `Bearer ${token}`
+        };
+    }
+
+    // LOAD STUDENT INFORMATION
+
+    async function loadStudent() {
+
+        try {
+
+            const response = await fetch(`${API_URL}/auth/me`, {
+                headers: authHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error('Session expired');
+            }
+
+            const data = await response.json();
+
+            const student = data.user || data.student || data;
+
+            document.getElementById('studentName').textContent =
+                student.full_name ||
+                student.name ||
+                student.first_name ||
+                'Student';
+
+        } catch (error) {
+
+            sessionStorage.removeItem('studyhubToken');
+            sessionStorage.removeItem('studyhubStudent');
+
+            window.location.href = 'login.html';
+
+        }
+
+    }
+
+    // DISPLAY MESSAGES
+
+    function showMessage(element, message, type = '') {
+
+        element.textContent = message;
+
+        element.className = 'message';
+
+        if (type) {
+            element.classList.add(type);
+        }
+
+    }
+
+    // RESET FORM
+
+    function resetForm() {
+
+        timetableForm.reset();
+
+        eventIdInput.value = '';
+
+        document.getElementById('formTitle').textContent =
+            'Add New Class';
+
+        saveBtn.textContent = 'Add to Timetable';
+
+        document.getElementById('cancelEditBtn')
+            .classList.add('hidden');
+
+        showMessage(formMessage, '');
+
+    }
+
+    // TIME FORMATTING
+
+    function formatTime(time) {
+
+        if (!time) return '';
+
+        const parts = String(time).split(':');
+
+        const hours = Number(parts[0]);
+
+        const minutes = parts[1];
+
+        const period = hours >= 12 ? 'PM' : 'AM';
+
+        const displayHours = hours % 12 || 12;
+
+        return `${displayHours}:${minutes} ${period}`;
+
+    }
+
+    // LOAD TIMETABLE EVENTS
+
+    async function loadTimetable() {
+
+        timetableContainer.innerHTML =
+            '<div class="empty">Loading your timetable...</div>';
+
+        try {
+
+            const response = await fetch(`${API_URL}/timetable`, {
+                headers: authHeaders()
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || 'Could not load timetable.'
+                );
+            }
+
+            allEvents = data.events || [];
+
+            renderTimetable();
+
+            showMessage(
+                scheduleMessage,
+                `${allEvents.length} timetable event(s) found.`,
+                'success-message'
+            );
+
+        } catch (error) {
+
+            timetableContainer.replaceChildren();
+
+            const empty = document.createElement('div');
+
+            empty.className = 'empty';
+
+            empty.textContent = error.message;
+
+            timetableContainer.appendChild(empty);
+
+            showMessage(
+                scheduleMessage,
+                'Unable to load your timetable.',
+                'error-message'
+            );
+
+        }
+
+    }
+
+    // CREATE EVENT CARD
+
+    function createEventCard(event) {
+
+        const card = document.createElement('div');
+
+        card.className = 'event-card';
+
+        const header = document.createElement('div');
+
+        header.className = 'event-header';
+
+        const titleArea = document.createElement('div');
+
+        const title = document.createElement('h3');
+
+        title.textContent = event.subject_name;
+
+        titleArea.appendChild(title);
+
+        if (event.course_code) {
+
+            const code = document.createElement('span');
+
+            code.className = 'course-code';
+
+            code.textContent = event.course_code;
+
+            titleArea.appendChild(code);
+
+        }
+
+        header.appendChild(titleArea);
+
+        const details = document.createElement('div');
+
+        details.className = 'event-details';
+
+        const detailItems = [
+            ['🕒 Time', `${formatTime(event.start_time)} - ${formatTime(event.end_time)}`],
+            ['📍 Venue', event.venue || 'Not specified'],
+            ['👨‍🏫 Lecturer', event.lecturer_name || 'Not specified']
+        ];
+
+        detailItems.forEach(([label, value]) => {
+
+            const paragraph = document.createElement('p');
+
+            paragraph.textContent = `${label}: ${value}`;
+
+            details.appendChild(paragraph);
+
+        });
+
+        card.append(header, details);
+
+        if (event.notes) {
+
+            const notes = document.createElement('div');
+
+            notes.className = 'event-notes';
+
+            notes.textContent = `Notes: ${event.notes}`;
+
+            card.appendChild(notes);
+
+        }
+
+        const actions = document.createElement('div');
+
+        actions.className = 'event-actions';
+
+        const editBtn = document.createElement('button');
+
+        editBtn.type = 'button';
+
+        editBtn.className = 'secondary-btn';
+
+        editBtn.textContent = 'Edit';
+
+        editBtn.addEventListener('click', () => editEvent(event));
+
+        const deleteBtn = document.createElement('button');
+
+        deleteBtn.type = 'button';
+
+        deleteBtn.className = 'danger-btn';
+
+        deleteBtn.textContent = 'Delete';
+
+        deleteBtn.addEventListener(
+            'click',
+            () => deleteEvent(event.id)
+        );
+
+        actions.append(editBtn, deleteBtn);
+
+        card.appendChild(actions);
+
+        return card;
+
+    }
+
+    // DISPLAY TIMETABLE
+
+    function renderTimetable() {
+
+        const search = document.getElementById('searchInput')
+            .value.toLowerCase().trim();
+
+        const selectedDay =
+            document.getElementById('dayFilter').value;
+
+        const filteredEvents = allEvents.filter(event => {
+
+            const subject = (
+                event.subject_name || ''
+            ).toLowerCase();
+
+            const code = (
+                event.course_code || ''
+            ).toLowerCase();
+
+            const matchesSearch =
+                subject.includes(search) ||
+                code.includes(search);
+
+            const matchesDay =
+                !selectedDay ||
+                event.day_of_week === selectedDay;
+
+            return matchesSearch && matchesDay;
+
+        });
+
+        timetableContainer.replaceChildren();
+
+        if (filteredEvents.length === 0) {
+
+            const empty = document.createElement('div');
+
+            empty.className = 'empty';
+
+            empty.textContent = allEvents.length === 0
+                ? 'Your timetable is empty. Add your first class above.'
+                : 'No timetable events match your search.';
+
+            timetableContainer.appendChild(empty);
+
+            return;
+
+        }
+
+        days.forEach(day => {
+
+            const dayEvents = filteredEvents.filter(
+                event => event.day_of_week === day
+            );
+
+            if (dayEvents.length === 0) return;
+
+            const section = document.createElement('div');
+
+            section.className = 'day-section';
+
+            const heading = document.createElement('h3');
+
+            heading.className = 'day-title';
+
+            heading.textContent =
+                `${day} (${dayEvents.length} ${dayEvents.length === 1 ? 'class' : 'classes'})`;
+
+            section.appendChild(heading);
+
+            dayEvents.forEach(event => {
+
+                section.appendChild(createEventCard(event));
+
+            });
+
+            timetableContainer.appendChild(section);
+
+        });
+
+    }
+
+    // ADD NEW OR UPDATE EVENT
+
+    timetableForm.addEventListener('submit', async function(event) {
+
+        event.preventDefault();
+
+        const startTime =
+            document.getElementById('startTime').value;
+
+        const endTime =
+            document.getElementById('endTime').value;
+
+        if (endTime <= startTime) {
+
+            showMessage(
+                formMessage,
+                'End time must be later than start time.',
+                'error-message'
+            );
+
+            return;
+
+        }
+
+        const payload = {
+
+            subject_name:
+                document.getElementById('subjectName').value.trim(),
+
+            course_code:
+                document.getElementById('courseCode').value.trim(),
+
+            day_of_week:
+                document.getElementById('dayOfWeek').value,
+
+            start_time: startTime,
+
+            end_time: endTime,
+
+            venue:
+                document.getElementById('venue').value.trim(),
+
+            lecturer_name:
+                document.getElementById('lecturerName').value.trim(),
+
+            notes:
+                document.getElementById('notes').value.trim()
+
+        };
+
+        const eventId = eventIdInput.value;
+
+        const isEditing = Boolean(eventId);
+
+        const url = isEditing
+            ? `${API_URL}/timetable/${eventId}`
+            : `${API_URL}/timetable`;
+
+        saveBtn.disabled = true;
+
+        saveBtn.textContent = isEditing
+            ? 'Updating...'
+            : 'Saving...';
+
+        showMessage(formMessage, '');
+
+        try {
+
+            const response = await fetch(url, {
+
+                method: isEditing ? 'PUT' : 'POST',
+
+                headers: {
+                    ...authHeaders(),
+                    'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify(payload)
+
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message || 'Could not save timetable event.'
+                );
+
+            }
+
+            showMessage(
+                formMessage,
+                data.message || 'Timetable saved successfully.',
+                'success-message'
+            );
+
+            resetForm();
+
+            await loadTimetable();
+
+        } catch (error) {
+
+            showMessage(
+                formMessage,
+                error.message,
+                'error-message'
+            );
+
+        } finally {
+
+            saveBtn.disabled = false;
+
+            saveBtn.textContent = eventIdInput.value
+                ? 'Update Timetable'
+                : 'Add to Timetable';
+
+        }
+
+    });
+
+    // EDIT EVENT
+
+    function editEvent(event) {
+
+        eventIdInput.value = event.id;
+
+        document.getElementById('subjectName').value =
+            event.subject_name || '';
+
+        document.getElementById('courseCode').value =
+            event.course_code || '';
+
+        document.getElementById('dayOfWeek').value =
+            event.day_of_week || '';
+
+        document.getElementById('startTime').value =
+            String(event.start_time || '').slice(0, 5);
+
+        document.getElementById('endTime').value =
+            String(event.end_time || '').slice(0, 5);
+
+        document.getElementById('venue').value =
+            event.venue || '';
+
+        document.getElementById('lecturerName').value =
+            event.lecturer_name || '';
+
+        document.getElementById('notes').value =
+            event.notes || '';
+
+        document.getElementById('formTitle').textContent =
+            'Edit Timetable Event';
+
+        saveBtn.textContent = 'Update Timetable';
+
+        document.getElementById('cancelEditBtn')
+            .classList.remove('hidden');
+
+        showMessage(
+            formMessage,
+            'Editing selected class. Make your changes below.',
+            'success-message'
+        );
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
+    }
+
+    // CANCEL EDIT
+
+    document.getElementById('cancelEditBtn')
+        .addEventListener('click', resetForm);
+
+    // DELETE EVENT
+
+    async function deleteEvent(id) {
+
+        const confirmed = confirm(
+            'Are you sure you want to delete this timetable event?'
+        );
+
+        if (!confirmed) return;
+
+        try {
+
+            const response = await fetch(
+                `${API_URL}/timetable/${id}`,
+                {
+                    method: 'DELETE',
+                    headers: authHeaders()
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message || 'Could not delete timetable event.'
+                );
+
+            }
+
+            if (eventIdInput.value === String(id)) {
+                resetForm();
+            }
+
+            showMessage(
+                scheduleMessage,
+                data.message || 'Timetable event deleted successfully.',
+                'success-message'
+            );
+
+            await loadTimetable();
+
+        } catch (error) {
+
+            showMessage(
+                scheduleMessage,
+                error.message,
+                'error-message'
+            );
+
+        }
+
+    }
+
+    // SEARCH AND FILTER
+
+    document.getElementById('searchInput')
+        .addEventListener('input', renderTimetable);
+
+    document.getElementById('dayFilter')
+        .addEventListener('change', renderTimetable);
+
+    // REFRESH
+
+    document.getElementById('refreshBtn')
+        .addEventListener('click', loadTimetable);
+
+    // LOGOUT
+
+    document.getElementById('logoutLink')
+        .addEventListener('click', function(event) {
+
+            event.preventDefault();
+
+            sessionStorage.removeItem('studyhubToken');
+
+            sessionStorage.removeItem('studyhubStudent');
+
+            window.location.href = 'login.html';
+
+        });
+
+    // INITIALIZE PAGE
+
+    if (token) {
+
+        loadStudent();
+
+        loadTimetable();
+
+    }
+
+</script>
+
+</body>
+</html>

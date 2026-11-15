@@ -1,0 +1,1352 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub | Account Settings</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #263247;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            background: #142d4e;
+            color: white;
+            padding: 25px 16px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 35px;
+            padding-left: 12px;
+        }
+
+        .logo span {
+            color: #39b6e8;
+        }
+
+        .nav-title {
+            color: #a9bdd3;
+            font-size: 11px;
+            margin: 22px 12px 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px;
+            margin-bottom: 5px;
+            border-radius: 7px;
+            color: #e0eaf5;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #24517e;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            background: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #e7edf4;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar h2 {
+            font-size: 20px;
+        }
+
+        .menu-toggle {
+            display: none;
+            border: none;
+            background: #eaf2fa;
+            color: #193c62;
+            font-size: 24px;
+            width: 42px;
+            height: 42px;
+            border-radius: 7px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-info {
+            font-size: 14px;
+            color: #52647a;
+        }
+
+        .logout {
+            border: none;
+            background: #eaf2fa;
+            color: #193c62;
+            padding: 10px 16px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .logout:hover {
+            background: #d8e8f8;
+        }
+
+        .content {
+            padding: 30px;
+            max-width: 1100px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #718096;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .settings-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 22px;
+            box-shadow: 0 3px 12px rgba(25, 50, 80, 0.05);
+        }
+
+        .settings-card h3 {
+            color: #193c62;
+            font-size: 18px;
+            margin-bottom: 7px;
+        }
+
+        .description {
+            color: #8795a8;
+            font-size: 13px;
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #52647a;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dce5ef;
+            border-radius: 7px;
+            outline: none;
+            font-size: 14px;
+            color: #263247;
+            background: white;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #39a9df;
+            box-shadow: 0 0 0 3px rgba(57, 182, 232, 0.12);
+        }
+
+        input:disabled {
+            background: #f1f4f8;
+            color: #718096;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .primary-btn {
+            background: #193c62;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .primary-btn:hover {
+            background: #24517e;
+        }
+
+        .primary-btn:disabled,
+        .danger-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .danger-btn {
+            background: #c0392b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .danger-btn:hover {
+            background: #a93226;
+        }
+
+        .preference-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 0;
+            border-bottom: 1px solid #edf1f5;
+        }
+
+        .preference-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .preference-row strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #263247;
+        }
+
+        .preference-row p {
+            font-size: 12px;
+            color: #8795a8;
+        }
+
+        .preference-row select {
+            max-width: 200px;
+        }
+
+        .switch {
+            width: 48px;
+            height: 26px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: #cbd5e1;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .slider::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .switch input:checked + .slider {
+            background: #2196d2;
+        }
+
+        .switch input:checked + .slider::before {
+            transform: translateX(22px);
+        }
+
+        .danger-card {
+            border: 1px solid #f2d5d2;
+        }
+
+        .danger-card h3 {
+            color: #c0392b;
+        }
+
+        .warning {
+            background: #fff5f4;
+            border: 1px solid #f3d4d0;
+            color: #9f3329;
+            border-radius: 7px;
+            padding: 13px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .message {
+            display: none;
+            padding: 12px 14px;
+            border-radius: 7px;
+            margin-bottom: 17px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .message.success {
+            display: block;
+            background: #eaf8ef;
+            color: #216b3a;
+            border: 1px solid #c9ead3;
+        }
+
+        .message.error {
+            display: block;
+            background: #fff0ef;
+            color: #a93226;
+            border: 1px solid #f0ceca;
+        }
+
+        /* Account deletion status */
+        .deletion-status {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #dce5ef;
+            background: #f8fafc;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .deletion-status strong {
+            color: #263247;
+        }
+
+        .status-pending {
+            background: #fff8e8;
+            border-color: #f4d58d;
+            color: #8a6100;
+        }
+
+        .status-approved {
+            background: #eaf8ef;
+            border-color: #c9ead3;
+            color: #216b3a;
+        }
+
+        .status-rejected {
+            background: #fff0ef;
+            border-color: #f0ceca;
+            color: #a93226;
+        }
+
+        .status-none {
+            background: #f1f7fc;
+            border-color: #d5e6f5;
+            color: #315b7d;
+        }
+
+        .status-loading {
+            background: #f8fafc;
+            border-color: #dce5ef;
+            color: #718096;
+        }
+
+        .sidebar-overlay {
+            display: none;
+        }
+
+        @media (max-width: 650px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 260px;
+                max-width: 85%;
+                height: 100vh;
+                overflow-y: auto;
+                z-index: 1001;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .menu-toggle {
+                display: inline-flex;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.45);
+                z-index: 1000;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .topbar {
+                padding: 15px 18px;
+            }
+
+            .topbar h2 {
+                font-size: 18px;
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .welcome h1 {
+                font-size: 22px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .settings-card {
+                padding: 19px;
+            }
+
+            .user-info {
+                font-size: 12px;
+            }
+
+            .logout {
+                padding: 8px 10px;
+            }
+
+            .preference-row {
+                align-items: flex-start;
+            }
+
+            .preference-row select {
+                max-width: 140px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .topbar {
+                flex-wrap: wrap;
+            }
+
+            .user-info {
+                width: 100%;
+                text-align: right;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">Study<span>Hub</span></div>
+
+        <nav>
+            <p class="nav-title">Main Menu</p>
+
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="library.html" class="nav-link">My Library</a>
+            <a href="timetable.html" class="nav-link">Timetable</a>
+            <a href="timer.html" class="nav-link">Study Timer</a>
+
+            <p class="nav-title">Academic Management</p>
+
+            <a href="goals.html" class="nav-link">Goals and Tasks</a>
+            <a href="#" class="nav-link">Reminders</a>
+            <a href="#" class="nav-link">Progress Board</a>
+            <a href="#" class="nav-link">Search</a>
+
+            <p class="nav-title">Account</p>
+
+            <a href="account-settings.html" class="nav-link active">Account Settings</a>
+            <a href="#" class="nav-link">Dark / Light Mode</a>
+            <a href="#" class="nav-link">Administrator Area</a>
+        </nav>
+
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+                <button
+                    class="menu-toggle"
+                    id="menuToggle"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="sidebar">
+                    ☰
+                </button>
+
+                <h2>Account Settings</h2>
+            </div>
+
+            <div class="user-info">
+                <span id="userName">Student</span>
+                &nbsp;
+                <button class="logout" onclick="logout()">Logout</button>
+            </div>
+
+        </header>
+
+        <div class="content">
+
+            <section class="welcome">
+                <h1>Account Settings</h1>
+                <p>Manage your personal information, password and account preferences.</p>
+            </section>
+
+            <!-- PROFILE SETTINGS -->
+            <section class="settings-card">
+
+                <h3>Personal Information</h3>
+                <p class="description">
+                    View and update your academic and personal profile details.
+                </p>
+
+                <div id="profileMessage" class="message"></div>
+
+                <form id="profileForm">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" required maxlength="100">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" required maxlength="150">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="institutionName">Institution Name</label>
+                            <input type="text" id="institutionName" required maxlength="150">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="programme">Programme</label>
+                            <input type="text" id="programme" required maxlength="150">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="yearOfStudy">Year of Study</label>
+                            <input type="number" id="yearOfStudy" min="1" max="10" required>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="primary-btn" id="profileButton">
+                        Save Profile Changes
+                    </button>
+
+                </form>
+
+            </section>
+
+            <!-- PASSWORD SETTINGS -->
+            <section class="settings-card">
+
+                <h3>Change Password</h3>
+                <p class="description">
+                    Use a strong password to help protect your StudyHub account.
+                </p>
+
+                <div id="passwordMessage" class="message"></div>
+
+                <form id="passwordForm">
+
+                    <div class="form-grid">
+
+                        <div class="form-group full">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" required autocomplete="current-password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" required minlength="8" autocomplete="new-password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmNewPassword">Confirm New Password</label>
+                            <input type="password" id="confirmNewPassword" required minlength="8" autocomplete="new-password">
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="primary-btn" id="passwordButton">
+                        Change Password
+                    </button>
+
+                </form>
+
+            </section>
+
+            <!-- PREFERENCES -->
+            <section class="settings-card">
+
+                <h3>Preferences</h3>
+                <p class="description">
+                    Customize your StudyHub language and notification preferences.
+                </p>
+
+                <div id="preferencesMessage" class="message"></div>
+
+                <form id="preferencesForm">
+
+                    <div class="preference-row">
+
+                        <div>
+                            <strong>Preferred Language</strong>
+                            <p>Select your preferred application language.</p>
+                        </div>
+
+                        <select id="language">
+                            <option value="English">English</option>
+                            <option value="Kiswahili">Kiswahili</option>
+                        </select>
+
+                    </div>
+
+                    <div class="preference-row">
+
+                        <div>
+                            <strong>Push Notifications</strong>
+                            <p>Allow StudyHub to send push notifications.</p>
+                        </div>
+
+                        <label class="switch">
+                            <input type="checkbox" id="pushNotifications">
+                            <span class="slider"></span>
+                        </label>
+
+                    </div>
+
+                    <br>
+
+                    <button type="submit" class="primary-btn" id="preferencesButton">
+                        Save Preferences
+                    </button>
+
+                </form>
+
+            </section>
+
+            <!-- ACCOUNT DELETION -->
+            <section class="settings-card danger-card">
+
+                <h3>Request Account Deletion</h3>
+
+                <p class="description">
+                    If you no longer want to use StudyHub, you can submit an account
+                    deletion request for administrator review.
+                </p>
+
+                <div class="warning">
+                    <strong>Important:</strong>
+                    Submitting this request does not immediately delete your account.
+                    Your request will be recorded as pending until it is reviewed.
+                </div>
+
+                <!-- ACCOUNT DELETION STATUS -->
+                <div
+                    id="deletionStatus"
+                    class="deletion-status status-loading"
+                    aria-live="polite">
+                    Checking your account deletion request...
+                </div>
+
+                <div id="deletionMessage" class="message"></div>
+
+                <form id="deletionForm">
+
+                    <div class="form-group">
+                        <label for="deletionReason">
+                            Reason for requesting account deletion (Optional)
+                        </label>
+
+                        <textarea
+                            id="deletionReason"
+                            maxlength="1000"
+                            placeholder="Tell us why you want to delete your account..."></textarea>
+                    </div>
+
+                    <button type="submit" class="danger-btn" id="deletionButton" disabled>
+                        Checking Request Status...
+                    </button>
+
+                </form>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+
+const API_BASE = 'http://localhost:5000/api';
+const token = sessionStorage.getItem('studyhubToken');
+
+if (!token) {
+    window.location.href = 'login.html';
+}
+
+// Sidebar functionality
+const sidebar = document.getElementById('sidebar');
+const menuToggle = document.getElementById('menuToggle');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+function openSidebar() {
+    sidebar.classList.add('open');
+    sidebarOverlay.classList.add('show');
+    menuToggle.setAttribute('aria-expanded', 'true');
+}
+
+function closeSidebar() {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('show');
+    menuToggle.setAttribute('aria-expanded', 'false');
+}
+
+menuToggle.addEventListener('click', function() {
+    if (sidebar.classList.contains('open')) {
+        closeSidebar();
+    } else {
+        openSidebar();
+    }
+});
+
+sidebarOverlay.addEventListener('click', closeSidebar);
+
+document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+    link.addEventListener('click', function() {
+        if (window.innerWidth <= 650) {
+            closeSidebar();
+        }
+    });
+});
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeSidebar();
+    }
+});
+
+// API helper
+async function apiRequest(endpoint, method = 'GET', body = null) {
+
+    const options = {
+        method,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    };
+
+    if (body !== null) {
+        options.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(`${API_BASE}${endpoint}`, options);
+
+    let data;
+
+    try {
+        data = await response.json();
+    } catch {
+        data = {
+            status: 'error',
+            message: 'The server returned an invalid response.'
+        };
+    }
+
+    if (response.status === 401) {
+        sessionStorage.removeItem('studyhubToken');
+        sessionStorage.removeItem('studyhubStudent');
+        window.location.href = 'login.html';
+        throw new Error('Your session has expired. Please log in again.');
+    }
+
+    if (!response.ok) {
+        throw new Error(data.message || 'Something went wrong.');
+    }
+
+    return data;
+}
+
+// Display messages
+function showMessage(elementId, message, type) {
+
+    const element = document.getElementById(elementId);
+
+    element.textContent = message;
+    element.className = `message ${type}`;
+
+    element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+    });
+}
+
+function clearMessage(elementId) {
+
+    const element = document.getElementById(elementId);
+
+    element.textContent = '';
+    element.className = 'message';
+}
+
+// Load student profile
+async function loadStudentProfile() {
+
+    try {
+
+        const data = await apiRequest('/auth/me');
+
+        const student = data.student;
+
+        document.getElementById('userName').textContent =
+            student.fullName || 'Student';
+
+        document.getElementById('fullName').value =
+            student.fullName || '';
+
+        document.getElementById('email').value =
+            student.email || '';
+
+        document.getElementById('institutionName').value =
+            student.institutionName || '';
+
+        document.getElementById('programme').value =
+            student.programme || '';
+
+        document.getElementById('yearOfStudy').value =
+            student.yearOfStudy || '';
+
+        sessionStorage.setItem(
+            'studyhubStudent',
+            JSON.stringify(student)
+        );
+
+    } catch (error) {
+
+        console.error('Profile loading error:', error);
+
+        showMessage(
+            'profileMessage',
+            error.message || 'Unable to load student profile.',
+            'error'
+        );
+    }
+}
+
+// Update student profile
+document.getElementById('profileForm').addEventListener('submit', async function(event) {
+
+    event.preventDefault();
+
+    clearMessage('profileMessage');
+
+    const button = document.getElementById('profileButton');
+
+    const profileData = {
+        fullName: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        institutionName: document.getElementById('institutionName').value.trim(),
+        programme: document.getElementById('programme').value.trim(),
+        yearOfStudy: Number(document.getElementById('yearOfStudy').value)
+    };
+
+    if (
+        !profileData.fullName ||
+        !profileData.email ||
+        !profileData.institutionName ||
+        !profileData.programme ||
+        !profileData.yearOfStudy
+    ) {
+        showMessage(
+            'profileMessage',
+            'Please complete all profile fields.',
+            'error'
+        );
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = 'Saving...';
+
+    try {
+
+        const data = await apiRequest(
+            '/auth/profile',
+            'PUT',
+            profileData
+        );
+
+        showMessage(
+            'profileMessage',
+            data.message || 'Profile updated successfully.',
+            'success'
+        );
+
+        document.getElementById('userName').textContent =
+            profileData.fullName;
+
+        if (data.student) {
+            sessionStorage.setItem(
+                'studyhubStudent',
+                JSON.stringify(data.student)
+            );
+        }
+
+    } catch (error) {
+
+        showMessage(
+            'profileMessage',
+            error.message || 'Unable to update profile.',
+            'error'
+        );
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = 'Save Profile Changes';
+    }
+
+});
+
+// Change password
+document.getElementById('passwordForm').addEventListener('submit', async function(event) {
+
+    event.preventDefault();
+
+    clearMessage('passwordMessage');
+
+    const currentPassword =
+        document.getElementById('currentPassword').value;
+
+    const newPassword =
+        document.getElementById('newPassword').value;
+
+    const confirmNewPassword =
+        document.getElementById('confirmNewPassword').value;
+
+    if (newPassword.length < 8) {
+
+        showMessage(
+            'passwordMessage',
+            'New password must contain at least 8 characters.',
+            'error'
+        );
+
+        return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+
+        showMessage(
+            'passwordMessage',
+            'New password and confirmation do not match.',
+            'error'
+        );
+
+        return;
+    }
+
+    const button = document.getElementById('passwordButton');
+
+    button.disabled = true;
+    button.textContent = 'Changing...';
+
+    try {
+
+        const data = await apiRequest(
+            '/auth/change-password',
+            'PUT',
+            {
+                currentPassword,
+                newPassword,
+                confirmNewPassword
+            }
+        );
+
+        showMessage(
+            'passwordMessage',
+            data.message || 'Password changed successfully.',
+            'success'
+        );
+
+        document.getElementById('passwordForm').reset();
+
+    } catch (error) {
+
+        showMessage(
+            'passwordMessage',
+            error.message || 'Unable to change password.',
+            'error'
+        );
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = 'Change Password';
+    }
+
+});
+
+// Load student preferences
+async function loadPreferences() {
+
+    try {
+
+        const data = await apiRequest('/auth/preferences');
+
+        const preferences = data.preferences;
+
+        document.getElementById('language').value =
+            preferences.language || 'English';
+
+        document.getElementById('pushNotifications').checked =
+            preferences.push_notifications_enabled === true;
+
+    } catch (error) {
+
+        console.error('Preferences loading error:', error);
+
+        showMessage(
+            'preferencesMessage',
+            error.message || 'Unable to load preferences.',
+            'error'
+        );
+    }
+}
+
+// Update student preferences
+document.getElementById('preferencesForm').addEventListener('submit', async function(event) {
+
+    event.preventDefault();
+
+    clearMessage('preferencesMessage');
+
+    const button = document.getElementById('preferencesButton');
+
+    const preferencesData = {
+        language: document.getElementById('language').value,
+        pushNotificationsEnabled:
+            document.getElementById('pushNotifications').checked
+    };
+
+    button.disabled = true;
+    button.textContent = 'Saving...';
+
+    try {
+
+        const data = await apiRequest(
+            '/auth/preferences',
+            'PUT',
+            preferencesData
+        );
+
+        showMessage(
+            'preferencesMessage',
+            data.message || 'Preferences updated successfully.',
+            'success'
+        );
+
+    } catch (error) {
+
+        showMessage(
+            'preferencesMessage',
+            error.message || 'Unable to update preferences.',
+            'error'
+        );
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = 'Save Preferences';
+    }
+
+});
+
+// Load account deletion request status
+async function loadAccountDeletionStatus() {
+
+    const statusElement = document.getElementById('deletionStatus');
+    const button = document.getElementById('deletionButton');
+
+    button.disabled = true;
+    button.textContent = 'Checking Request Status...';
+
+    statusElement.className = 'deletion-status status-loading';
+    statusElement.textContent = 'Checking your account deletion request...';
+
+    try {
+
+        const data = await apiRequest('/auth/deletion-status');
+
+        const request = data.request;
+
+        // No previous deletion request
+        if (!request) {
+
+            statusElement.className = 'deletion-status status-none';
+
+            statusElement.innerHTML =
+                '<strong>Request Status:</strong> No account deletion request has been submitted.';
+
+            button.disabled = false;
+            button.textContent = 'Submit Deletion Request';
+
+            return;
+        }
+
+        const requestDate = new Date(request.requested_at);
+
+        const formattedDate = isNaN(requestDate.getTime())
+            ? 'Date unavailable'
+            : requestDate.toLocaleString();
+
+        // Pending request
+        if (request.status === 'pending') {
+
+            statusElement.className = 'deletion-status status-pending';
+
+            statusElement.innerHTML =
+                `<strong>Request Status:</strong> Pending<br>
+                 Your account deletion request is waiting for administrator review.<br>
+                 <strong>Submitted:</strong> ${formattedDate}`;
+
+            button.disabled = true;
+            button.textContent = 'Request Already Submitted';
+
+            return;
+        }
+
+        // Approved request
+        if (request.status === 'approved') {
+
+            statusElement.className = 'deletion-status status-approved';
+
+            statusElement.innerHTML =
+                `<strong>Request Status:</strong> Approved<br>
+                 Your account deletion request has been approved by an administrator.<br>
+                 <strong>Submitted:</strong> ${formattedDate}`;
+
+            button.disabled = true;
+            button.textContent = 'Request Approved';
+
+            return;
+        }
+
+        // Rejected request
+        if (request.status === 'rejected') {
+
+            statusElement.className = 'deletion-status status-rejected';
+
+            statusElement.innerHTML =
+                `<strong>Request Status:</strong> Rejected<br>
+                 Your previous account deletion request was rejected. You may submit another request if necessary.<br>
+                 <strong>Submitted:</strong> ${formattedDate}`;
+
+            button.disabled = false;
+            button.textContent = 'Submit New Deletion Request';
+
+            return;
+        }
+
+        statusElement.className = 'deletion-status status-none';
+
+        statusElement.textContent =
+            'Your account deletion request has an unknown status. Please contact the administrator.';
+
+        button.disabled = true;
+        button.textContent = 'Request Status Unavailable';
+
+    } catch (error) {
+
+        console.error('Deletion status loading error:', error);
+
+        statusElement.className = 'deletion-status status-rejected';
+        statusElement.textContent =
+            error.message || 'Unable to retrieve account deletion status.';
+
+        button.disabled = true;
+        button.textContent = 'Status Could Not Be Loaded';
+    }
+}
+
+// Submit account deletion request
+document.getElementById('deletionForm').addEventListener('submit', async function(event) {
+
+    event.preventDefault();
+
+    clearMessage('deletionMessage');
+
+    const button = document.getElementById('deletionButton');
+
+    // Do not submit if the button is disabled
+    if (button.disabled) {
+        return;
+    }
+
+    const confirmed = confirm(
+        'Are you sure you want to submit an account deletion request? Your account will not be deleted immediately.'
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const reason = document.getElementById('deletionReason').value.trim();
+
+    button.disabled = true;
+    button.textContent = 'Submitting...';
+
+    try {
+
+        const data = await apiRequest(
+            '/auth/request-deletion',
+            'POST',
+            { reason }
+        );
+
+        showMessage(
+            'deletionMessage',
+            data.message || 'Account deletion request submitted successfully.',
+            'success'
+        );
+
+        document.getElementById('deletionForm').reset();
+
+        // Reload status from database
+        await loadAccountDeletionStatus();
+
+    } catch (error) {
+
+        showMessage(
+            'deletionMessage',
+            error.message || 'Unable to submit account deletion request.',
+            'error'
+        );
+
+        // Check whether a request already exists
+        await loadAccountDeletionStatus();
+
+    }
+
+});
+
+// Logout
+function logout() {
+
+    sessionStorage.removeItem('studyhubToken');
+    sessionStorage.removeItem('studyhubStudent');
+
+    window.location.href = 'login.html';
+}
+
+// Initialize page
+async function initializeSettingsPage() {
+
+    if (!token) {
+        return;
+    }
+
+    await Promise.all([
+        loadStudentProfile(),
+        loadPreferences(),
+        loadAccountDeletionStatus()
+    ]);
+}
+
+initializeSettingsPage();
+
+</script>
+
+</body>
+</html>
+```

@@ -1,0 +1,1262 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyHub | Administrator Area</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #263247;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 245px;
+    background: #142d4e;
+    color: white;
+    padding: 25px 16px;
+    flex-shrink: 0;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 35px;
+    padding-left: 12px;
+}
+
+.logo span {
+    color: #39b6e8;
+}
+
+.nav-title {
+    color: #a9bdd3;
+    font-size: 11px;
+    margin: 22px 12px 10px;
+    text-transform: uppercase;
+}
+
+.nav-link {
+    display: block;
+    padding: 12px;
+    margin-bottom: 5px;
+    border-radius: 7px;
+    color: #e0eaf5;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: #24517e;
+    color: white;
+}
+
+.main {
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    background: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid #e7edf4;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topbar h2 {
+    font-size: 20px;
+}
+
+.user-info {
+    font-size: 14px;
+    color: #52647a;
+}
+
+.menu-toggle {
+    display: none;
+    border: none;
+    background: #eaf2fa;
+    color: #193c62;
+    font-size: 24px;
+    width: 42px;
+    height: 42px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.logout {
+    border: none;
+    background: #eaf2fa;
+    color: #193c62;
+    padding: 10px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+.content {
+    padding: 30px;
+}
+
+.page-section {
+    display: none;
+}
+
+.page-section.active {
+    display: block;
+}
+
+.welcome {
+    margin-bottom: 28px;
+}
+
+.welcome h1 {
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: #718096;
+    font-size: 14px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.card, .section {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(25, 50, 80, 0.05);
+}
+
+.card p {
+    color: #718096;
+    font-size: 13px;
+    margin-bottom: 14px;
+}
+
+.card h2 {
+    font-size: 28px;
+    color: #193c62;
+}
+
+.section {
+    margin-bottom: 22px;
+}
+
+.section h3 {
+    font-size: 17px;
+    margin-bottom: 18px;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+th, td {
+    text-align: left;
+    padding: 13px 12px;
+    border-bottom: 1px solid #e7edf4;
+    font-size: 13px;
+}
+
+th {
+    background: #f4f7fb;
+    color: #52647a;
+}
+
+td {
+    color: #35445a;
+}
+
+button {
+    cursor: pointer;
+}
+
+.action-btn {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.activate {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.deactivate {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.primary-btn {
+    background: #193c62;
+    color: white;
+    border: none;
+    padding: 11px 17px;
+    border-radius: 7px;
+    font-weight: bold;
+}
+
+.primary-btn:hover {
+    background: #24517e;
+}
+
+.setting-row {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr auto;
+    gap: 15px;
+    align-items: center;
+    padding: 17px 0;
+    border-bottom: 1px solid #e7edf4;
+}
+
+.setting-row h4 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.setting-row p {
+    color: #718096;
+    font-size: 12px;
+}
+
+.setting-row input,
+.setting-row select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d7e0eb;
+    border-radius: 6px;
+    outline: none;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.status.active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status.inactive {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.message {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 7px;
+    font-size: 13px;
+    display: none;
+}
+
+.message.success {
+    display: block;
+    background: #dcfce7;
+    color: #166534;
+}
+
+.message.error {
+    display: block;
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.empty {
+    color: #8795a8;
+    font-size: 14px;
+    padding: 15px 0;
+}
+
+.sidebar-overlay {
+    display: none;
+}
+
+@media (max-width: 1000px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .setting-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .setting-row button {
+        grid-column: 2;
+    }
+}
+
+@media (max-width: 650px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 260px;
+        max-width: 85%;
+        height: 100vh;
+        overflow-y: auto;
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 1000;
+    }
+
+    .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .topbar {
+        padding: 15px 18px;
+    }
+
+    .topbar h2 {
+        font-size: 17px;
+    }
+
+    .content {
+        padding: 18px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .card h2 {
+        font-size: 23px;
+    }
+
+    .setting-row {
+        grid-template-columns: 1fr;
+    }
+
+    .setting-row button {
+        grid-column: 1;
+    }
+
+    .welcome h1 {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 400px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">Study<span>Hub</span></div>
+
+    <nav>
+        <p class="nav-title">Administrator</p>
+
+        <a class="nav-link active" data-section="overview">Overview</a>
+        <a class="nav-link" data-section="users">User Management</a>
+        <a class="nav-link" data-section="reports">System Reports</a>
+        <a class="nav-link" data-section="audit">Audit Logs</a>
+        <a class="nav-link" data-section="settings">Platform Settings</a>
+
+        <p class="nav-title">Account</p>
+        <a href="dashboard.html" class="nav-link">Student Dashboard</a>
+        <a href="#" class="nav-link" onclick="logout()">Logout</a>
+    </nav>
+
+</aside>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<main class="main">
+
+<header class="topbar">
+    <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <h2 id="pageTitle">Administrator Overview</h2>
+    </div>
+
+    <div class="user-info">
+        <span id="adminName">Administrator</span>
+        <button class="logout" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="content">
+
+<div id="message" class="message"></div>
+
+<!-- OVERVIEW -->
+<section class="page-section active" id="overview">
+
+    <div class="welcome">
+        <h1>Welcome, <span id="welcomeName">Administrator</span>!</h1>
+        <p>Monitor and manage the StudyHub platform.</p>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <p>Total Users</p>
+            <h2 id="totalUsers">0</h2>
+        </div>
+
+        <div class="card">
+            <p>Active Users</p>
+            <h2 id="activeUsers">0</h2>
+        </div>
+
+        <div class="card">
+            <p>Inactive Users</p>
+            <h2 id="inactiveUsers">0</h2>
+        </div>
+
+        <div class="card">
+            <p>Pending Deletion Requests</p>
+            <h2 id="pendingRequests">0</h2>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Administrator Activity</h3>
+        <p id="totalAdminActions" class="empty">Loading administrator activities...</p>
+    </div>
+
+    <button class="primary-btn" onclick="loadOverview()">Refresh Overview</button>
+
+</section>
+
+
+<!-- USER MANAGEMENT -->
+<section class="page-section" id="users">
+
+    <div class="welcome">
+        <h1>User Management</h1>
+        <p>View, activate and deactivate StudyHub accounts.</p>
+    </div>
+
+    <div class="section">
+        <h3>Registered Users</h3>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Institution</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTable">
+                    <tr><td colspan="7">Loading users...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <button class="primary-btn" onclick="loadUsers()">Refresh Users</button>
+
+</section>
+
+
+<!-- REPORTS -->
+<section class="page-section" id="reports">
+
+    <div class="welcome">
+        <h1>System Reports</h1>
+        <p>Review platform registration and account statistics.</p>
+    </div>
+
+    <div class="section">
+        <h3>User Statistics</h3>
+
+        <div class="cards">
+            <div class="card">
+                <p>Total Students</p>
+                <h2 id="reportStudents">0</h2>
+            </div>
+
+            <div class="card">
+                <p>Total Administrators</p>
+                <h2 id="reportAdmins">0</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Daily Registrations (Last 30 Days)</h3>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Registration Date</th>
+                        <th>Total Registrations</th>
+                    </tr>
+                </thead>
+                <tbody id="registrationTable">
+                    <tr><td colspan="2">Loading reports...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Account Deletion Statistics</h3>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Total Requests</th>
+                    </tr>
+                </thead>
+                <tbody id="deletionTable">
+                    <tr><td colspan="2">Loading statistics...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <button class="primary-btn" onclick="loadReports()">Refresh Reports</button>
+
+</section>
+
+
+<!-- AUDIT LOGS -->
+<section class="page-section" id="audit">
+
+    <div class="welcome">
+        <h1>Administrator Audit Logs</h1>
+        <p>Monitor sensitive actions performed by administrators.</p>
+    </div>
+
+    <div class="section">
+        <h3>Recorded Activities</h3>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Admin</th>
+                        <th>Action</th>
+                        <th>Target</th>
+                        <th>Details</th>
+                        <th>IP Address</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="auditTable">
+                    <tr><td colspan="6">Loading audit logs...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <button class="primary-btn" onclick="loadAuditLogs()">Refresh Audit Logs</button>
+
+</section>
+
+
+<!-- PLATFORM SETTINGS -->
+<section class="page-section" id="settings">
+
+    <div class="welcome">
+        <h1>Platform Settings</h1>
+        <p>Manage the general configuration of StudyHub.</p>
+    </div>
+
+    <div class="section">
+        <h3>System Configuration</h3>
+
+        <div id="settingsContainer">
+            <p class="empty">Loading platform settings...</p>
+        </div>
+    </div>
+
+    <button class="primary-btn" onclick="loadSettings()">Refresh Settings</button>
+
+</section>
+
+</div>
+</main>
+</div>
+
+
+<script>
+
+const API_BASE = 'http://localhost:5000/api';
+const token = sessionStorage.getItem('studyhubToken');
+
+const sidebar = document.getElementById('sidebar');
+const menuToggle = document.getElementById('menuToggle');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+let adminId = null;
+let currentUsers = [];
+
+
+function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    })[character]);
+}
+
+
+function showMessage(message, type = 'success') {
+    const element = document.getElementById('message');
+
+    element.textContent = message;
+    element.className = 'message ' + type;
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    setTimeout(() => {
+        element.className = 'message';
+    }, 5000);
+}
+
+
+async function apiRequest(endpoint, options = {}) {
+
+    const response = await fetch(API_BASE + endpoint, {
+        ...options,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    });
+
+    const data = await response.json();
+
+    if (response.status === 401) {
+        logout();
+        throw new Error('Session expired. Please login again.');
+    }
+
+    if (!response.ok) {
+        throw new Error(data.message || 'Request failed.');
+    }
+
+    return data;
+}
+
+
+// LOGOUT
+function logout() {
+    sessionStorage.removeItem('studyhubToken');
+    sessionStorage.removeItem('studyhubStudent');
+    window.location.href = 'login.html';
+}
+
+
+// ADMIN AUTHENTICATION
+async function verifyAdmin() {
+
+    if (!token) {
+        window.location.href = 'login.html';
+        return false;
+    }
+
+    try {
+        const data = await apiRequest('/admin/test');
+
+        if (data.admin) {
+            adminId = data.admin.id;
+
+            document.getElementById('adminName').textContent =
+                'Administrator';
+
+            document.getElementById('welcomeName').textContent =
+                'Administrator';
+        }
+
+        return true;
+
+    } catch (error) {
+        alert(error.message || 'Administrator access denied.');
+        window.location.href = 'dashboard.html';
+        return false;
+    }
+}
+
+
+// NAVIGATION
+function showSection(sectionId, title) {
+
+    document.querySelectorAll('.page-section').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    document.getElementById(sectionId).classList.add('active');
+
+    document.querySelectorAll('[data-section]').forEach(link => {
+        link.classList.remove('active');
+    });
+
+    const activeLink = document.querySelector(
+        `[data-section="${sectionId}"]`
+    );
+
+    if (activeLink) {
+        activeLink.classList.add('active');
+    }
+
+    document.getElementById('pageTitle').textContent = title;
+
+    if (window.innerWidth <= 650) {
+        closeSidebar();
+    }
+
+    if (sectionId === 'overview') loadOverview();
+    if (sectionId === 'users') loadUsers();
+    if (sectionId === 'reports') loadReports();
+    if (sectionId === 'audit') loadAuditLogs();
+    if (sectionId === 'settings') loadSettings();
+}
+
+
+document.querySelectorAll('[data-section]').forEach(link => {
+    link.addEventListener('click', () => {
+
+        const section = link.dataset.section;
+
+        const titles = {
+            overview: 'Administrator Overview',
+            users: 'User Management',
+            reports: 'System Reports',
+            audit: 'Administrator Audit Logs',
+            settings: 'Platform Settings'
+        };
+
+        showSection(section, titles[section]);
+    });
+});
+
+
+// SIDEBAR
+function openSidebar() {
+    sidebar.classList.add('open');
+    sidebarOverlay.classList.add('show');
+}
+
+function closeSidebar() {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('show');
+}
+
+menuToggle.addEventListener('click', openSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
+
+
+// OVERVIEW
+async function loadOverview() {
+
+    try {
+        const data = await apiRequest('/admin/summary');
+        const summary = data.summary;
+
+        document.getElementById('totalUsers').textContent =
+            summary.totalUsers;
+
+        document.getElementById('activeUsers').textContent =
+            summary.activeUsers;
+
+        document.getElementById('inactiveUsers').textContent =
+            summary.inactiveUsers;
+
+        document.getElementById('pendingRequests').textContent =
+            summary.pendingDeletionRequests;
+
+        document.getElementById('totalAdminActions').textContent =
+            'Total recorded administrator actions: ' +
+            summary.totalAdminActions;
+
+    } catch (error) {
+        showMessage(error.message, 'error');
+    }
+}
+
+
+// USER MANAGEMENT
+async function loadUsers() {
+
+    const table = document.getElementById('usersTable');
+
+    table.innerHTML =
+        '<tr><td colspan="7">Loading users...</td></tr>';
+
+    try {
+        const data = await apiRequest('/admin/users');
+
+        currentUsers = data.users;
+
+        if (!currentUsers.length) {
+            table.innerHTML =
+                '<tr><td colspan="7">No users found.</td></tr>';
+            return;
+        }
+
+        table.innerHTML = currentUsers.map(user => {
+
+            const statusClass = user.is_active
+                ? 'active'
+                : 'inactive';
+
+            const statusText = user.is_active
+                ? 'Active'
+                : 'Inactive';
+
+            let actionButton = '';
+
+            if (Number(user.id) === Number(adminId)) {
+
+                actionButton = 'Current Admin';
+
+            } else {
+
+                if (user.role === 'student' && user.is_active) {
+
+                    actionButton += `
+                        <button
+                            class="action-btn"
+                            onclick="resetStudentPassword(
+                                ${Number(user.id)},
+                                '${escapeHTML(user.full_name)}'
+                            )">
+                            Reset Password
+                        </button>
+                    `;
+                }
+
+                actionButton += user.is_active
+                    ? `<button
+                        class="action-btn deactivate"
+                        onclick="changeUserStatus(${Number(user.id)}, false)">
+                        Deactivate
+                       </button>`
+                    : `<button
+                        class="action-btn activate"
+                        onclick="changeUserStatus(${Number(user.id)}, true)">
+                        Activate
+                       </button>`;
+            }
+
+            return `
+                <tr>
+                    <td>${escapeHTML(user.id)}</td>
+                    <td>${escapeHTML(user.full_name)}</td>
+                    <td>${escapeHTML(user.email)}</td>
+                    <td>${escapeHTML(user.role)}</td>
+                    <td>${escapeHTML(user.institution_name || 'N/A')}</td>
+                    <td>
+                        <span class="status ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+                    <td>${actionButton}</td>
+                </tr>
+            `;
+
+        }).join('');
+
+    } catch (error) {
+
+        table.innerHTML =
+            '<tr><td colspan="7">Unable to load users.</td></tr>';
+
+        showMessage(error.message, 'error');
+    }
+}
+
+
+// ADMIN RESET STUDENT PASSWORD
+async function resetStudentPassword(studentId, studentName) {
+
+    const student = currentUsers.find(
+        user => Number(user.id) === Number(studentId)
+    );
+
+    if (
+        !student ||
+        student.role !== 'student' ||
+        !student.is_active
+    ) {
+        showMessage(
+            'Password reset is only available for active student accounts.',
+            'error'
+        );
+        return;
+    }
+
+    const confirmed = confirm(
+        `Are you sure you want to reset the password for ${studentName}?\n\n` +
+        `The temporary password will be: 123456\n\n` +
+        `The student must change this password after login.`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const data = await apiRequest(
+            `/admin/users/${studentId}/reset-password`,
+            {
+                method: 'PATCH'
+            }
+        );
+
+        showMessage(data.message, 'success');
+
+        await loadUsers();
+        await loadOverview();
+
+    } catch (error) {
+
+        showMessage(
+            error.message || 'Unable to reset student password.',
+            'error'
+        );
+    }
+}
+
+
+// ACTIVATE / DEACTIVATE USER
+async function changeUserStatus(userId, isActive) {
+
+    const action = isActive
+        ? 'activate'
+        : 'deactivate';
+
+    if (!confirm(`Are you sure you want to ${action} this account?`)) {
+        return;
+    }
+
+    try {
+
+        const data = await apiRequest(
+            `/admin/users/${userId}/status`,
+            {
+                method: 'PATCH',
+                body: JSON.stringify({ isActive })
+            }
+        );
+
+        showMessage(data.message);
+
+        await loadUsers();
+        await loadOverview();
+
+    } catch (error) {
+        showMessage(error.message, 'error');
+    }
+}
+
+
+// REPORTS
+async function loadReports() {
+
+    try {
+
+        const data = await apiRequest('/admin/reports');
+        const reports = data.reports;
+
+        document.getElementById('reportStudents').textContent =
+            reports.userStatistics.total_students;
+
+        document.getElementById('reportAdmins').textContent =
+            reports.userStatistics.total_admins;
+
+        const registrationTable =
+            document.getElementById('registrationTable');
+
+        registrationTable.innerHTML =
+            reports.dailyRegistrations.length
+                ? reports.dailyRegistrations.map(item => `
+                    <tr>
+                        <td>${escapeHTML(
+                            new Date(item.registration_date)
+                                .toLocaleDateString()
+                        )}</td>
+                        <td>${escapeHTML(item.total_registrations)}</td>
+                    </tr>
+                `).join('')
+                : '<tr><td colspan="2">No registrations recorded.</td></tr>';
+
+        const deletionTable =
+            document.getElementById('deletionTable');
+
+        deletionTable.innerHTML =
+            reports.deletionStatistics.length
+                ? reports.deletionStatistics.map(item => `
+                    <tr>
+                        <td>${escapeHTML(item.status)}</td>
+                        <td>${escapeHTML(item.total)}</td>
+                    </tr>
+                `).join('')
+                : '<tr><td colspan="2">No deletion requests.</td></tr>';
+
+    } catch (error) {
+        showMessage(error.message, 'error');
+    }
+}
+
+
+// AUDIT LOGS
+async function loadAuditLogs() {
+
+    const table = document.getElementById('auditTable');
+
+    table.innerHTML =
+        '<tr><td colspan="6">Loading audit logs...</td></tr>';
+
+    try {
+
+        const data = await apiRequest('/admin/audit-logs');
+
+        table.innerHTML = data.logs.length
+            ? data.logs.map(log => `
+                <tr>
+                    <td>${escapeHTML(log.admin_name || 'Unknown')}</td>
+                    <td>${escapeHTML(log.action)}</td>
+                    <td>
+                        ${escapeHTML(log.target_type)}
+                        #${escapeHTML(log.target_id)}
+                    </td>
+                    <td>${escapeHTML(JSON.stringify(log.details || {}))}</td>
+                    <td>${escapeHTML(log.ip_address || 'N/A')}</td>
+                    <td>${escapeHTML(
+                        new Date(log.created_at).toLocaleString()
+                    )}</td>
+                </tr>
+            `).join('')
+            : '<tr><td colspan="6">No audit logs found.</td></tr>';
+
+    } catch (error) {
+
+        table.innerHTML =
+            '<tr><td colspan="6">Unable to load audit logs.</td></tr>';
+
+        showMessage(error.message, 'error');
+    }
+}
+
+
+// PLATFORM SETTINGS
+async function loadSettings() {
+
+    const container =
+        document.getElementById('settingsContainer');
+
+    container.innerHTML =
+        '<p class="empty">Loading platform settings...</p>';
+
+    try {
+
+        const data = await apiRequest('/admin/settings');
+
+        container.innerHTML = data.settings.map(setting => {
+
+            let inputHTML = '';
+
+            if (
+                setting.setting_value === 'true' ||
+                setting.setting_value === 'false'
+            ) {
+
+                inputHTML = `
+                    <select id="setting-${Number(setting.id)}">
+                        <option value="true"
+                            ${setting.setting_value === 'true' ? 'selected' : ''}>
+                            Enabled / True
+                        </option>
+
+                        <option value="false"
+                            ${setting.setting_value === 'false' ? 'selected' : ''}>
+                            Disabled / False
+                        </option>
+                    </select>
+                `;
+
+            } else {
+
+                inputHTML = `
+                    <input
+                        type="text"
+                        id="setting-${Number(setting.id)}"
+                        value="${escapeHTML(setting.setting_value)}">
+                `;
+            }
+
+            return `
+                <div class="setting-row">
+
+                    <div>
+                        <h4>${escapeHTML(setting.setting_key)}</h4>
+                        <p>${escapeHTML(setting.description || '')}</p>
+                    </div>
+
+                    ${inputHTML}
+
+                    <button
+                        class="primary-btn"
+                        onclick="saveSetting(${Number(setting.id)})">
+                        Save
+                    </button>
+
+                </div>
+            `;
+
+        }).join('');
+
+    } catch (error) {
+
+        container.innerHTML =
+            '<p class="empty">Unable to load platform settings.</p>';
+
+        showMessage(error.message, 'error');
+    }
+}
+
+
+// SAVE PLATFORM SETTING
+async function saveSetting(settingId) {
+
+    const input =
+        document.getElementById(`setting-${settingId}`);
+
+    const settingValue = input.value;
+
+    if (!settingValue.trim()) {
+        showMessage('Setting value cannot be empty.', 'error');
+        return;
+    }
+
+    if (!confirm(
+        'Are you sure you want to update this platform setting?'
+    )) {
+        return;
+    }
+
+    try {
+
+        const data = await apiRequest(
+            `/admin/settings/${settingId}`,
+            {
+                method: 'PATCH',
+                body: JSON.stringify({ settingValue })
+            }
+        );
+
+        showMessage(data.message);
+        await loadSettings();
+
+    } catch (error) {
+        showMessage(error.message, 'error');
+    }
+}
+
+
+// INITIALIZE ADMIN AREA
+async function initializeAdmin() {
+
+    const isAdmin = await verifyAdmin();
+
+    if (!isAdmin) return;
+
+    await loadOverview();
+}
+
+initializeAdmin();
+
+
+</script>
+
+</body>
+</html>
+```

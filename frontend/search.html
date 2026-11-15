@@ -1,0 +1,1246 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Search | StudyHub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        :root {
+            --primary: #087fbe;
+            --primary-dark: #06699e;
+            --background: #f4f7fb;
+            --white: #ffffff;
+            --text: #263445;
+            --muted: #718096;
+            --border: #e5eaf0;
+            --danger: #dc3545;
+            --success: #198754;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .header {
+            background: var(--white);
+            padding: 17px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .brand h2 {
+            color: var(--primary);
+            font-size: 25px;
+        }
+
+        .brand p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .back-btn {
+            background: #edf6fc;
+            color: var(--primary);
+            border: 1px solid #d4eaf8;
+            padding: 11px 17px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* MAIN */
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .page-heading {
+            margin-bottom: 22px;
+        }
+
+        .page-heading h1 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* SEARCH CARD */
+        .search-card {
+            background: var(--white);
+            padding: 27px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .search-card h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .search-card > p {
+            color: var(--muted);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 0;
+            padding: 14px 16px;
+            border: 1px solid #d5dce5;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(8,127,190,0.10);
+        }
+
+        .btn {
+            border: none;
+            padding: 13px 21px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .search-btn {
+            background: var(--primary);
+            color: white;
+            min-width: 110px;
+        }
+
+        .search-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .clear-btn {
+            background: #edf0f4;
+            color: #475569;
+        }
+
+        .clear-btn:hover {
+            background: #dfe5eb;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* STATUS MESSAGE */
+        .message {
+            margin-top: 17px;
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .message.error {
+            color: var(--danger);
+        }
+
+        .message.success {
+            color: var(--success);
+        }
+
+        /* SUMMARY */
+        .summary {
+            display: none;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 23px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 19px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .summary-card p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        .summary-card h3 {
+            color: var(--primary);
+            font-size: 25px;
+        }
+
+        /* RESULTS */
+        .results {
+            margin-top: 27px;
+        }
+
+        .results-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            gap: 10px;
+        }
+
+        .results-heading h2 {
+            font-size: 21px;
+        }
+
+        .result-section {
+            background: white;
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 9px rgba(0,0,0,0.035);
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 17px;
+            gap: 10px;
+        }
+
+        .section-heading h3 {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .count {
+            background: #eaf5fc;
+            color: var(--primary);
+            padding: 5px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* RESULT ITEM */
+        .result-item {
+            border: 1px solid var(--border);
+            padding: 17px;
+            border-radius: 9px;
+            margin-bottom: 11px;
+            transition: 0.2s;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-item:hover {
+            border-color: #b7dff5;
+            box-shadow: 0 3px 10px rgba(8,127,190,0.07);
+        }
+
+        .item-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .item-title {
+            font-size: 16px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .item-description {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .meta-tag {
+            background: #f1f5f9;
+            color: #526174;
+            padding: 6px 9px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .status-tag {
+            background: #e8f7ee;
+            color: var(--success);
+        }
+
+        .priority-tag {
+            background: #fff4df;
+            color: #a36b00;
+        }
+
+        .details-btn {
+            background: #eaf5fc;
+            color: var(--primary);
+            border: none;
+            padding: 9px 13px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            white-space: nowrap;
+            margin-top: 12px;
+        }
+
+        .details-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .empty {
+            color: #94a3b8;
+            font-size: 14px;
+            padding: 5px 0;
+        }
+
+        /* DETAILS MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.60);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 650px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 13px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+            animation: appear 0.2s ease;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 23px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .modal-header h2 {
+            font-size: 19px;
+            overflow-wrap: anywhere;
+        }
+
+        .close-btn {
+            background: rgba(255,255,255,0.18);
+            color: white;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 21px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .close-btn:hover {
+            background: rgba(255,255,255,0.32);
+        }
+
+        .modal-body {
+            padding: 23px;
+        }
+
+        .detail-row {
+            padding: 13px 0;
+            border-bottom: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: 145px 1fr;
+            gap: 15px;
+            line-height: 1.6;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .detail-value {
+            color: var(--text);
+            font-size: 14px;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .modal-footer {
+            padding: 15px 23px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .modal-close-bottom {
+            background: #edf0f4;
+            color: #475569;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 25px 15px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 700px) {
+            .header {
+                padding: 15px 5%;
+            }
+
+            .container {
+                margin: 25px auto;
+                padding: 0 13px;
+            }
+
+            .search-card {
+                padding: 20px;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-btn,
+            .clear-btn {
+                width: 100%;
+            }
+
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .item-top {
+                flex-direction: column;
+            }
+
+            .results-heading h2 {
+                font-size: 18px;
+            }
+
+            .detail-row {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+
+            .brand h2 {
+                font-size: 21px;
+            }
+
+            .back-btn {
+                padding: 10px;
+                font-size: 12px;
+            }
+        }
+
+        @media(max-width: 380px) {
+            .summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="brand">
+            <h2>StudyHub</h2>
+            <p>Academic Management System</p>
+        </div>
+
+        <button class="back-btn" onclick="goToDashboard()">
+            ← Back to Dashboard
+        </button>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+
+        <div class="page-heading">
+            <h1>Search</h1>
+            <p>Search and access your academic information in one place.</p>
+        </div>
+
+
+        <!-- SEARCH FORM -->
+        <section class="search-card">
+
+            <h2>Search StudyHub</h2>
+
+            <p>
+                Find your library files, tasks, goals and timetable events.
+            </p>
+
+            <form class="search-form" id="searchForm">
+
+                <input
+                    type="search"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Enter a keyword, title or subject..."
+                    maxlength="100"
+                    autocomplete="off"
+                    required
+                >
+
+                <button type="submit" class="btn search-btn" id="searchButton">
+                    Search
+                </button>
+
+                <button type="button" class="btn clear-btn" id="clearButton">
+                    Clear
+                </button>
+
+            </form>
+
+            <div class="message" id="message" role="status" aria-live="polite"></div>
+
+        </section>
+
+
+        <!-- SUMMARY CARDS -->
+        <section class="summary" id="summary">
+
+            <div class="summary-card">
+                <p>Total Results</p>
+                <h3 id="totalCount">0</h3>
+            </div>
+
+            <div class="summary-card">
+                <p>Library Files</p>
+                <h3 id="libraryCount">0</h3>
+            </div>
+
+            <div class="summary-card">
+                <p>Tasks</p>
+                <h3 id="tasksCount">0</h3>
+            </div>
+
+            <div class="summary-card">
+                <p>Goals & Timetable</p>
+                <h3 id="otherCount">0</h3>
+            </div>
+
+        </section>
+
+
+        <!-- SEARCH RESULTS -->
+        <section class="results" id="results"></section>
+
+    </main>
+
+
+    <!-- DETAILS MODAL -->
+    <div class="modal" id="detailsModal" role="dialog"
+         aria-modal="true" aria-labelledby="modalTitle">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2 id="modalTitle">Item Details</h2>
+
+                <button
+                    class="close-btn"
+                    id="closeModal"
+                    aria-label="Close details"
+                >
+                    ×
+                </button>
+
+            </div>
+
+            <div class="modal-body" id="modalBody"></div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn modal-close-bottom"
+                    id="closeModalBottom"
+                >
+                    Close Details
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <footer>
+        © <span id="currentYear"></span> StudyHub. All rights reserved.
+    </footer>
+
+
+    <script>
+
+        
+        // API CONFIGURATION
+        const API_URL = 'http://localhost:5000/api';
+
+        // ELEMENTS
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const clearButton = document.getElementById('clearButton');
+        const message = document.getElementById('message');
+        const resultsContainer = document.getElementById('results');
+        const summary = document.getElementById('summary');
+
+        const detailsModal = document.getElementById('detailsModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+
+        document.getElementById('currentYear').textContent =
+            new Date().getFullYear();
+
+        // AUTHENTICATION
+        const token = sessionStorage.getItem('studyhubToken');
+
+        let isAuthenticated = false;
+        let searchTimer = null;
+        let requestNumber = 0;
+
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        // LOGOUT
+        function logoutUser() {
+            sessionStorage.removeItem('studyhubToken');
+            sessionStorage.removeItem('studyhubStudent');
+            window.location.href = 'login.html';
+        }
+
+        // VERIFY AUTHENTICATION
+        async function verifyAuthentication() {
+            if (!token) return false;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/me`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    logoutUser();
+                    return false;
+                }
+
+                if (!response.ok) {
+                    throw new Error('Unable to verify your account.');
+                }
+
+                isAuthenticated = true;
+                searchInput.disabled = false;
+                searchButton.disabled = false;
+
+                showMessage('Your account is verified. You can now search.');
+
+                return true;
+
+            } catch (error) {
+                isAuthenticated = false;
+                searchInput.disabled = true;
+                searchButton.disabled = true;
+
+                showMessage(
+                    'Unable to connect to StudyHub. Please check your connection.',
+                    'error'
+                );
+
+                return false;
+            }
+        }
+
+        // BACK TO DASHBOARD
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // DISPLAY MESSAGE
+        function showMessage(text, type = '') {
+            message.textContent = text;
+            message.className = 'message ' + type;
+        }
+
+        // SEARCH FUNCTION
+        async function performSearch(keyword) {
+            keyword = keyword.trim();
+
+            if (!keyword) {
+                resultsContainer.innerHTML = '';
+                summary.style.display = 'none';
+                showMessage('');
+                return;
+            }
+
+            if (!isAuthenticated) {
+                showMessage('Please log in to use Search.', 'error');
+                return;
+            }
+
+            const currentRequest = ++requestNumber;
+
+            searchButton.disabled = true;
+            searchButton.textContent = 'Searching...';
+
+            showMessage('Searching your academic information...');
+
+            try {
+                const response = await fetch(
+                    `${API_URL}/search?q=${encodeURIComponent(keyword)}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (currentRequest !== requestNumber) return;
+
+                if (response.status === 401 || response.status === 403) {
+                    logoutUser();
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message || 'Unable to complete search.'
+                    );
+                }
+
+                if (!data.results) {
+                    throw new Error('Invalid search response from server.');
+                }
+
+                showMessage(
+                    `Found ${data.totalResults} result(s) for "${data.keyword}".`,
+                    'success'
+                );
+
+                displayResults(data.results, data.totalResults);
+
+            } catch (error) {
+                if (currentRequest === requestNumber) {
+                    showMessage(
+                        error.message || 'Something went wrong.',
+                        'error'
+                    );
+                }
+
+            } finally {
+                if (currentRequest === requestNumber) {
+                    searchButton.disabled = false;
+                    searchButton.textContent = 'Search';
+                }
+            }
+        }
+
+        // LIVE SEARCH
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimer);
+
+            const keyword = searchInput.value.trim();
+
+            if (!keyword) {
+                requestNumber++;
+                resultsContainer.innerHTML = '';
+                summary.style.display = 'none';
+                showMessage('');
+                return;
+            }
+
+            searchTimer = setTimeout(function() {
+                performSearch(keyword);
+            }, 300);
+        });
+
+        // MANUAL SEARCH
+        searchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            clearTimeout(searchTimer);
+
+            const keyword = searchInput.value.trim();
+
+            if (!keyword) {
+                showMessage('Please enter a search keyword.', 'error');
+                return;
+            }
+
+            performSearch(keyword);
+        });
+
+        // DISPLAY SEARCH RESULTS
+        function displayResults(results, totalResults) {
+            resultsContainer.innerHTML = '';
+
+            const library = results.library || [];
+            const tasks = results.tasks || [];
+            const goals = results.goals || [];
+            const timetable = results.timetable || [];
+
+            document.getElementById('totalCount').textContent = totalResults;
+            document.getElementById('libraryCount').textContent = library.length;
+            document.getElementById('tasksCount').textContent = tasks.length;
+
+            document.getElementById('otherCount').textContent =
+                goals.length + timetable.length;
+
+            summary.style.display = 'grid';
+
+            const sections = [
+                {
+                    key: 'library',
+                    title: 'Library Files',
+                    icon: '📚',
+                    items: library
+                },
+                {
+                    key: 'tasks',
+                    title: 'Tasks',
+                    icon: '📝',
+                    items: tasks
+                },
+                {
+                    key: 'goals',
+                    title: 'Goals',
+                    icon: '🎯',
+                    items: goals
+                },
+                {
+                    key: 'timetable',
+                    title: 'Timetable',
+                    icon: '📅',
+                    items: timetable
+                }
+            ];
+
+            const heading = document.createElement('div');
+            heading.className = 'results-heading';
+
+            const headingText = document.createElement('h2');
+            headingText.textContent = 'Search Results';
+
+            heading.appendChild(headingText);
+            resultsContainer.appendChild(heading);
+
+            sections.forEach(section => {
+                const sectionElement = document.createElement('div');
+                sectionElement.className = 'result-section';
+
+                const sectionHeading = document.createElement('div');
+                sectionHeading.className = 'section-heading';
+
+                const title = document.createElement('h3');
+                title.textContent = `${section.icon} ${section.title}`;
+
+                const count = document.createElement('span');
+                count.className = 'count';
+                count.textContent = `${section.items.length} found`;
+
+                sectionHeading.appendChild(title);
+                sectionHeading.appendChild(count);
+                sectionElement.appendChild(sectionHeading);
+
+                if (section.items.length === 0) {
+                    const empty = document.createElement('p');
+                    empty.className = 'empty';
+                    empty.textContent = 'No results found in this category.';
+                    sectionElement.appendChild(empty);
+
+                } else {
+                    section.items.forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'result-item';
+
+                        const top = document.createElement('div');
+                        top.className = 'item-top';
+
+                        const titleElement = document.createElement('h4');
+                        titleElement.className = 'item-title';
+
+                        titleElement.textContent =
+                            item.title ||
+                            item.subject_name ||
+                            item.original_file_name ||
+                            'Untitled';
+
+                        top.appendChild(titleElement);
+                        card.appendChild(top);
+
+                        const description = document.createElement('p');
+                        description.className = 'item-description';
+
+                        description.textContent =
+                            item.description ||
+                            item.category ||
+                            item.notes ||
+                            'No description available.';
+
+                        card.appendChild(description);
+
+                        const meta = document.createElement('div');
+                        meta.className = 'item-meta';
+
+                        if (item.status) {
+                            addTag(meta, `Status: ${item.status}`, 'status-tag');
+                        }
+
+                        if (item.priority) {
+                            addTag(meta, `Priority: ${item.priority}`, 'priority-tag');
+                        }
+
+                        if (item.category) {
+                            addTag(meta, item.category);
+                        }
+
+                        if (item.due_date) {
+                            addTag(meta, `Due: ${formatDate(item.due_date)}`);
+                        }
+
+                        if (item.day_of_week) {
+                            addTag(meta, item.day_of_week);
+                        }
+
+                        if (item.course_code) {
+                            addTag(meta, item.course_code);
+                        }
+
+                        card.appendChild(meta);
+
+                        const detailsButton = document.createElement('button');
+                        detailsButton.className = 'details-btn';
+                        detailsButton.textContent = 'View Details →';
+
+                        detailsButton.addEventListener('click', function() {
+                            if (section.key === 'library') {
+                                openLibraryDocument(item.id);
+                            } else {
+                                openDetails(section.title, item);
+                            }
+                        });
+
+                        card.appendChild(detailsButton);
+                        sectionElement.appendChild(card);
+                    });
+                }
+
+                resultsContainer.appendChild(sectionElement);
+            });
+        }
+
+        // ADD TAG
+        function addTag(container, text, extraClass = '') {
+            const tag = document.createElement('span');
+            tag.className = 'meta-tag ' + extraClass;
+            tag.textContent = text;
+            container.appendChild(tag);
+        }
+
+        // FORMAT DATE
+        function formatDate(value) {
+            if (!value) return 'Not specified';
+
+            const date = new Date(value);
+
+            if (Number.isNaN(date.getTime())) {
+                return String(value);
+            }
+
+            return date.toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // OPEN LIBRARY DOCUMENT
+        async function openLibraryDocument(documentId) {
+            if (!documentId) {
+                showMessage('Document ID is missing.', 'error');
+                return;
+            }
+
+            const newTab = window.open('about:blank', '_blank');
+
+            if (!newTab) {
+                showMessage(
+                    'Please allow pop-ups in your browser to open documents.',
+                    'error'
+                );
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `${API_URL}/library/${encodeURIComponent(documentId)}/download`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (response.status === 401 || response.status === 403) {
+                    newTab.close();
+                    logoutUser();
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message || 'Unable to open this document.'
+                    );
+                }
+
+                const documentUrl =
+                    data.downloadUrl ||
+                    data.url ||
+                    data.signedUrl ||
+                    data.data?.downloadUrl ||
+                    data.data?.url;
+
+                if (!documentUrl) {
+                    throw new Error(
+                        'Document URL was not returned by the server.'
+                    );
+                }
+
+                newTab.location.href = documentUrl;
+
+                showMessage('Document opened successfully.', 'success');
+
+            } catch (error) {
+                newTab.close();
+
+                showMessage(
+                    error.message || 'Unable to open document.',
+                    'error'
+                );
+            }
+        }
+
+        // OPEN DETAILS MODAL
+        function openDetails(category, item) {
+            modalTitle.textContent = category + ' Details';
+            modalBody.innerHTML = '';
+
+            const fields = [
+                ['Title', item.title],
+                ['Subject', item.subject_name],
+                ['Original File Name', item.original_file_name],
+                ['Category', item.category],
+                ['Description / Notes', item.description || item.notes],
+                ['Course Code', item.course_code],
+                ['Day', item.day_of_week],
+                ['Start Time', item.start_time],
+                ['End Time', item.end_time],
+                ['Venue', item.venue],
+                ['Lecturer', item.lecturer_name],
+                ['Due Date', item.due_date ? formatDate(item.due_date) : null],
+                ['Target Date', item.target_date ? formatDate(item.target_date) : null],
+                ['Priority', item.priority],
+                ['Status', item.status],
+                ['File Extension', item.file_extension],
+                ['File Size', item.file_size_bytes != null
+                    ? formatFileSize(item.file_size_bytes)
+                    : null],
+                ['Created At', item.created_at
+                    ? new Date(item.created_at).toLocaleString()
+                    : null],
+                ['Record ID', item.id]
+            ];
+
+            fields.forEach(([label, value]) => {
+                if (value === null || value === undefined || value === '') {
+                    return;
+                }
+
+                const row = document.createElement('div');
+                row.className = 'detail-row';
+
+                const labelElement = document.createElement('div');
+                labelElement.className = 'detail-label';
+                labelElement.textContent = label;
+
+                const valueElement = document.createElement('div');
+                valueElement.className = 'detail-value';
+                valueElement.textContent = String(value);
+
+                row.appendChild(labelElement);
+                row.appendChild(valueElement);
+                modalBody.appendChild(row);
+            });
+
+            if (modalBody.children.length === 0) {
+                const empty = document.createElement('p');
+                empty.textContent = 'No additional details available.';
+                modalBody.appendChild(empty);
+            }
+
+            detailsModal.classList.add('active');
+        }
+
+        // FORMAT FILE SIZE
+        function formatFileSize(bytes) {
+            const size = Number(bytes);
+
+            if (!Number.isFinite(size)) return String(bytes);
+            if (size < 1024) return size + ' Bytes';
+
+            if (size < 1024 * 1024) {
+                return (size / 1024).toFixed(2) + ' KB';
+            }
+
+            return (size / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        // CLOSE DETAILS
+        function closeDetails() {
+            detailsModal.classList.remove('active');
+        }
+
+        document.getElementById('closeModal').addEventListener(
+            'click',
+            closeDetails
+        );
+
+        document.getElementById('closeModalBottom').addEventListener(
+            'click',
+            closeDetails
+        );
+
+        detailsModal.addEventListener('click', function(event) {
+            if (event.target === detailsModal) {
+                closeDetails();
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeDetails();
+            }
+        });
+
+        // CLEAR SEARCH
+        clearButton.addEventListener('click', function() {
+            clearTimeout(searchTimer);
+            requestNumber++;
+
+            searchInput.value = '';
+            resultsContainer.innerHTML = '';
+            summary.style.display = 'none';
+
+            showMessage('Search cleared.');
+            closeDetails();
+            searchInput.focus();
+        });
+
+        // INITIALIZE
+        searchInput.disabled = true;
+        searchButton.disabled = true;
+        verifyAuthentication();
+
+
+    </script>
+
+</body>
+</html>

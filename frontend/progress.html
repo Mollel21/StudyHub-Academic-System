@@ -1,0 +1,683 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Board | StudyHub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #263238;
+        }
+
+        header {
+            background: #087fbe;
+            color: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 {
+            font-size: 23px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            color: #17324d;
+            margin-bottom: 8px;
+        }
+
+        .page-heading p {
+            color: #718096;
+        }
+
+        select {
+            padding: 11px;
+            border: 1px solid #d5dce5;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .summary-card h3 {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .summary-card p {
+            font-size: 28px;
+            font-weight: bold;
+            color: #087fbe;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .section h2 {
+            color: #17324d;
+            margin-bottom: 20px;
+        }
+
+        .progress-item {
+            margin-bottom: 22px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 9px;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #e8eef4;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #087fbe;
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+
+        .chart-placeholder {
+            min-height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #718096;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .weekly-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            gap: 12px;
+            min-height: 240px;
+            padding: 20px 10px 5px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .chart-day {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 210px;
+            min-width: 0;
+        }
+
+        .chart-value {
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 7px;
+            text-align: center;
+        }
+
+        .chart-bar-area {
+            height: 150px;
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .chart-bar {
+            width: 65%;
+            max-width: 45px;
+            min-height: 4px;
+            background: #087fbe;
+            border-radius: 6px 6px 0 0;
+            transition: height 0.4s ease;
+        }
+
+        .chart-day-name {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 10px;
+        }
+
+        .empty {
+            color: #718096;
+            text-align: center;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+
+        .primary-btn {
+            background: #087fbe;
+            color: white;
+            border: none;
+            padding: 11px 17px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .primary-btn:hover {
+            background: #06699e;
+        }
+
+        .status-message {
+            display: none;
+            padding: 13px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .status-error {
+            display: block;
+            color: #b42318;
+            background: #fee4e2;
+        }
+
+        .status-loading {
+            display: block;
+            color: #087fbe;
+            background: #e8f4fb;
+        }
+
+        .status-success {
+            display: block;
+            color: #18794e;
+            background: #e6f4ea;
+        }
+
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 18px;
+        }
+
+        .performance-item {
+            background: #f8fafc;
+            padding: 17px;
+            border-radius: 8px;
+        }
+
+        .performance-item span {
+            display: block;
+            color: #718096;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .performance-item strong {
+            font-size: 20px;
+            color: #087fbe;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #718096;
+            font-size: 13px;
+        }
+
+        @media(max-width: 650px) {
+            .container {
+                width: 94%;
+            }
+
+            .section {
+                padding: 17px;
+            }
+
+            .weekly-chart {
+                gap: 5px;
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+
+            .chart-day-name {
+                font-size: 10px;
+            }
+
+            .chart-value {
+                font-size: 9px;
+            }
+
+            .chart-bar {
+                width: 75%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>📚 StudyHub</h2>
+    <a href="dashboard.html">← Back to Dashboard</a>
+</header>
+
+<div class="container">
+
+    <div class="page-heading">
+        <div>
+            <h1>📊 Progress Board</h1>
+            <p>Monitor your academic activities and study progress.</p>
+        </div>
+
+        <select id="periodFilter">
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="all">All Time</option>
+        </select>
+    </div>
+
+    <div id="statusMessage" class="status-message"></div>
+
+    <div class="summary">
+
+        <div class="summary-card">
+            <h3>Completed Tasks</h3>
+            <p id="completedTasks">0</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Completed Goals</h3>
+            <p id="completedGoals">0</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Goal Completion Rate</h3>
+            <p id="goalRate">0%</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Total Study Hours</h3>
+            <p id="studyHours">0</p>
+        </div>
+
+    </div>
+
+    <div class="section">
+        <h2>Task Completion Progress</h2>
+
+        <div class="progress-item">
+            <div class="progress-info">
+                <strong>Completed Tasks</strong>
+                <span id="taskPercentage">0%</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="taskProgress"></div>
+            </div>
+            <p id="taskDetails" style="font-size:12px;color:#718096;margin-top:8px;">
+                0 of 0 tasks completed
+            </p>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-info">
+                <strong>Completed Goals</strong>
+                <span id="goalPercentage">0%</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="goalProgress"></div>
+            </div>
+            <p id="goalDetails" style="font-size:12px;color:#718096;margin-top:8px;">
+                0 of 0 goals completed
+            </p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📚 Study Activity Overview</h2>
+
+        <div id="studyActivity" class="chart-placeholder">
+            Loading study activity...
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🎯 Academic Performance Summary</h2>
+
+        <div id="performanceSummary" class="empty">
+            Loading your academic progress...
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📈 Progress Information</h2>
+
+        <p style="line-height:1.8;color:#64748b;">
+            This board presents progress based on your recorded StudyHub
+            activities, including completed tasks, completed goals and
+            recorded study sessions. These figures represent your personal
+            study activity and do not represent official university grades.
+        </p>
+    </div>
+
+    <button class="primary-btn" onclick="loadProgress()">
+        🔄 Refresh Progress
+    </button>
+
+</div>
+
+<footer>
+    StudyHub © 2026 | Academic Management System
+</footer>
+
+<script>
+    const API_URL = 'http://localhost:5000/api';
+
+    const token = sessionStorage.getItem('studyhubToken');
+
+    const periodFilter = document.getElementById('periodFilter');
+    const statusMessage = document.getElementById('statusMessage');
+
+    // CHECK AUTHENTICATION
+    if (!token) {
+        window.location.href = 'login.html';
+    }
+
+    // DISPLAY STATUS MESSAGE
+    function showMessage(message, type) {
+        statusMessage.textContent = message;
+        statusMessage.className = 'status-message status-' + type;
+    }
+
+    // FORMAT STUDY TIME
+    function formatStudyTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+
+        if (hours === 0) {
+            return minutes + ' min';
+        }
+
+        return hours + ' hr ' + minutes + ' min';
+    }
+
+    // UPDATE PROGRESS BAR
+    function updateProgressBar(elementId, percentage) {
+        const element = document.getElementById(elementId);
+
+        const safePercentage = Math.max(
+            0,
+            Math.min(100, Number(percentage) || 0)
+        );
+
+        element.style.width = safePercentage + '%';
+    }
+
+    // DISPLAY SUMMARY
+    function displaySummary(data) {
+        const tasks = data.taskProgress;
+        const goals = data.goalProgress;
+        const study = data.studyProgress;
+
+        document.getElementById('completedTasks').textContent =
+            tasks.completed;
+
+        document.getElementById('completedGoals').textContent =
+            goals.completed;
+
+        document.getElementById('goalRate').textContent =
+            goals.completion_rate + '%';
+
+        document.getElementById('studyHours').textContent =
+            study.total_study_hours.toFixed(2);
+
+        // TASK PROGRESS
+        document.getElementById('taskPercentage').textContent =
+            tasks.completion_rate + '%';
+
+        document.getElementById('taskDetails').textContent =
+            tasks.completed + ' of ' + tasks.total + ' tasks completed';
+
+        updateProgressBar('taskProgress', tasks.completion_rate);
+
+        // GOAL PROGRESS
+        document.getElementById('goalPercentage').textContent =
+            goals.completion_rate + '%';
+
+        document.getElementById('goalDetails').textContent =
+            goals.completed + ' of ' + goals.total + ' goals completed';
+
+        updateProgressBar('goalProgress', goals.completion_rate);
+    }
+
+    // DISPLAY WEEKLY STUDY CHART
+    function displayWeeklyActivity(activity) {
+        const container = document.getElementById('studyActivity');
+
+        if (!activity || activity.length === 0) {
+            container.className = 'empty';
+            container.textContent = 'No study activity available.';
+            return;
+        }
+
+        container.className = 'weekly-chart';
+
+        const maximum = Math.max(
+            ...activity.map(day => Number(day.study_seconds)),
+            0
+        );
+
+        container.innerHTML = activity.map(day => {
+            const seconds = Number(day.study_seconds);
+
+            const height = maximum > 0
+                ? Math.max((seconds / maximum) * 150, seconds > 0 ? 5 : 0)
+                : 0;
+
+            const hours = Number(day.study_hours).toFixed(2);
+
+            return `
+                <div class="chart-day">
+                    <div class="chart-value">
+                        ${hours}h
+                    </div>
+
+                    <div class="chart-bar-area">
+                        <div
+                            class="chart-bar"
+                            style="height:${height}px"
+                            title="${formatStudyTime(seconds)}"
+                        ></div>
+                    </div>
+
+                    <span class="chart-day-name">
+                        ${day.day}
+                    </span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // DISPLAY ACADEMIC SUMMARY
+    function displayPerformance(data) {
+        const tasks = data.taskProgress;
+        const goals = data.goalProgress;
+        const study = data.studyProgress;
+
+        const summary = document.getElementById('performanceSummary');
+
+        summary.className = '';
+
+        summary.innerHTML = `
+            <p style="color:#64748b;line-height:1.8;">
+                Here is a summary of your recorded academic activities
+                for the selected period.
+            </p>
+
+            <div class="performance-grid">
+
+                <div class="performance-item">
+                    <span>Total Tasks</span>
+                    <strong>${tasks.total}</strong>
+                </div>
+
+                <div class="performance-item">
+                    <span>Pending Tasks</span>
+                    <strong>${tasks.pending}</strong>
+                </div>
+
+                <div class="performance-item">
+                    <span>Tasks In Progress</span>
+                    <strong>${tasks.in_progress}</strong>
+                </div>
+
+                <div class="performance-item">
+                    <span>Total Goals</span>
+                    <strong>${goals.total}</strong>
+                </div>
+
+                <div class="performance-item">
+                    <span>Active Goals</span>
+                    <strong>${goals.active}</strong>
+                </div>
+
+                <div class="performance-item">
+                    <span>Completed Study Sessions</span>
+                    <strong>${study.total_sessions}</strong>
+                </div>
+
+                <div class="performance-item">
+                    <span>Total Study Time</span>
+                    <strong>${formatStudyTime(study.total_study_seconds)}</strong>
+                </div>
+
+                <div class="performance-item">
+                    <span>Average Session</span>
+                    <strong>${formatStudyTime(study.average_session_seconds)}</strong>
+                </div>
+
+            </div>
+        `;
+    }
+
+    // LOAD PROGRESS FROM BACKEND
+    async function loadProgress() {
+        const period = periodFilter.value;
+
+        showMessage('Loading your progress...', 'loading');
+
+        try {
+            const response = await fetch(
+                `${API_URL}/progress?period=${encodeURIComponent(period)}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            const data = await response.json();
+
+            if (response.status === 401 || response.status === 403) {
+                sessionStorage.removeItem('studyhubToken');
+                sessionStorage.removeItem('studyhubStudent');
+
+                window.location.href = 'login.html';
+                return;
+            }
+
+            if (!response.ok || data.status !== 'success') {
+                throw new Error(
+                    data.message || 'Failed to retrieve progress.'
+                );
+            }
+
+            displaySummary(data);
+            displayWeeklyActivity(data.weeklyActivity);
+            displayPerformance(data);
+
+            statusMessage.className = 'status-message';
+            statusMessage.textContent = '';
+
+        } catch (error) {
+            console.error('Progress loading error:', error);
+
+            showMessage(
+                error.message || 'Unable to connect to StudyHub server.',
+                'error'
+            );
+        }
+    }
+
+    // CHANGE PERIOD FILTER
+    periodFilter.addEventListener('change', loadProgress);
+
+    // LOAD INITIAL DATA
+    if (token) {
+        loadProgress();
+    }
+</script>
+
+</body>
+</html>
