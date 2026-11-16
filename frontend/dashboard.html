@@ -483,7 +483,7 @@ async function loadTheme() {
 
     try {
         const response = await fetch(
-            'http://localhost:5000/api/auth/preferences',
+            'https://studyhub-backend-meza.onrender.com/api/auth/preferences',
             {
                 method: 'GET',
                 headers: {
@@ -572,7 +572,7 @@ async function loadDashboard() {
 
     try {
         const response = await fetch(
-            'http://localhost:5000/api/auth/me',
+            'https://studyhub-backend-meza.onrender.com/api/auth/me',
             {
                 method: 'GET',
                 headers: {
@@ -634,7 +634,7 @@ async function toggleTheme(event) {
 
     try {
         const response = await fetch(
-            'http://localhost:5000/api/auth/preferences',
+            'https://studyhub-backend-meza.onrender.com/api/auth/preferences',
             {
                 method: 'PUT',
                 headers: {
