@@ -1489,6 +1489,29 @@
 
 
 <script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+        try {
+            const registration = await navigator.serviceWorker.register(
+                './service-worker.js'
+            );
+
+            console.log('StudyHub Service Worker registered:', registration.scope);
+
+            await navigator.serviceWorker.ready;
+
+            console.log('StudyHub Service Worker is ready.');
+        } catch (error) {
+            console.error('Service Worker registration failed:', error);
+        }
+    });
+}
+</script>
+</body>
+
+
+
+<script>
 
     // MOBILE NAVIGATION
 

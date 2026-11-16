@@ -1,7 +1,7 @@
 
-const CACHE_NAME = 'studyhub-cache-v1';
+const CACHE_NAME = 'studyhub-cache-v2';
 
-// Public app pages and essential PWA files
+// Essential application pages and PWA files
 const APP_SHELL = [
     './',
     './index.html',
@@ -26,24 +26,32 @@ const APP_SHELL = [
     './assets/icons/icon-512.png'
 ];
 
-// INSTALL: Save essential app files
+// INSTALL
 self.addEventListener('install', event => {
     event.waitUntil(
         (async () => {
             const cache = await caches.open(CACHE_NAME);
 
-            // Cache files individually so one missing file
-            // does not prevent the service worker from installing.
-            await Promise.allSettled(
+            const results = await Promise.allSettled(
                 APP_SHELL.map(file => cache.add(file))
             );
+
+            results.forEach((result, index) => {
+                if (result.status === 'rejected') {
+                    console.warn(
+                        'StudyHub cache failed:',
+                        APP_SHELL[index],
+                        result.reason
+                    );
+                }
+            });
 
             await self.skipWaiting();
         })()
     );
 });
 
-// ACTIVATE: Remove old caches and take control
+// ACTIVATE
 self.addEventListener('activate', event => {
     event.waitUntil(
         (async () => {
@@ -63,25 +71,22 @@ self.addEventListener('activate', event => {
     );
 });
 
-// FETCH: Handle offline pages and static resources
+// FETCH
 self.addEventListener('fetch', event => {
     const request = event.request;
 
-    // Only handle GET requests
     if (request.method !== 'GET') return;
 
     const url = new URL(request.url);
 
-    // Never cache external websites or Supabase requests
+    // Ignore external websites and services
     if (url.origin !== self.location.origin) return;
 
-    // Never cache backend API requests
+    // Never cache API requests or authenticated requests
     if (url.pathname.includes('/api/')) return;
-
-    // Do not cache requests carrying authorization headers
     if (request.headers.has('Authorization')) return;
 
-    // HTML navigation: network first, then cached page
+    // HTML navigation: Network first, cache fallback
     if (request.mode === 'navigate') {
         event.respondWith(
             (async () => {
@@ -98,6 +103,7 @@ self.addEventListener('fetch', event => {
                     }
 
                     return response;
+
                 } catch (error) {
                     const cachedPage = await caches.match(request, {
                         ignoreSearch: true
@@ -124,7 +130,7 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // Static files: cache first, then network
+    // Static resources: Cache first, network fallback
     event.respondWith(
         (async () => {
             const cachedResponse = await caches.match(request);
@@ -135,8 +141,8 @@ self.addEventListener('fetch', event => {
                 const response = await fetch(request);
 
                 const isStaticResource =
-                    /\.(css|js|png|jpg|jpeg|svg|webp|ico|woff2?)$/i
-                        .test(url.pathname);
+                    ['style', 'script', 'image', 'font'].includes(request.destination) ||
+                    /\.(css|js|png|jpg|jpeg|svg|webp|avif|gif|ico|woff2?)$/i.test(url.pathname);
 
                 if (
                     response.ok &&
@@ -149,6 +155,7 @@ self.addEventListener('fetch', event => {
                 }
 
                 return response;
+
             } catch (error) {
                 return new Response('Resource unavailable offline.', {
                     status: 503,
@@ -161,7 +168,7 @@ self.addEventListener('fetch', event => {
     );
 });
 
-// PUSH: Receive StudyHub reminders
+// PUSH NOTIFICATIONS
 self.addEventListener('push', event => {
     let data = {};
 
@@ -207,7 +214,7 @@ self.addEventListener('push', event => {
     );
 });
 
-// NOTIFICATION CLICK: Open the reminder page
+// NOTIFICATION CLICK
 self.addEventListener('notificationclick', event => {
     event.notification.close();
 
